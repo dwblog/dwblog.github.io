@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title><![CDATA[dw的博客]]></title>
+  
+  <link href="/blog/atom.xml" rel="self"/>
+  <link href="http://yoursite.com/"/>
+  <updated>2015-04-28T07:46:30.216Z</updated>
+  <id>http://yoursite.com/</id>
+  
+  <author>
+    <name><![CDATA[dw]]></name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[新的微博]]></title>
+    <link href="http://yoursite.com/2015/04/28/%E6%96%B0%E7%9A%84%E5%BE%AE%E5%8D%9A/"/>
+    <id>http://yoursite.com/2015/04/28/新的微博/</id>
+    <published>2015-04-28T07:46:30.000Z</published>
+    <updated>2015-04-28T07:46:30.216Z</updated>
+    <content type="html"></content>
+    <summary type="html">
+    
+    </summary>
+    
+  </entry>
+  
+</feed>
