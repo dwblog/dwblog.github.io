@@ -4,7 +4,7 @@
   
   <link href="/blog/atom.xml" rel="self"/>
   <link href="http://yoursite.com/"/>
-  <updated>2015-04-28T07:46:30.216Z</updated>
+  <updated>2015-04-28T08:23:37.244Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,14 +15,25 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title><![CDATA[新的微博]]></title>
-    <link href="http://yoursite.com/2015/04/28/%E6%96%B0%E7%9A%84%E5%BE%AE%E5%8D%9A/"/>
-    <id>http://yoursite.com/2015/04/28/新的微博/</id>
+    <title><![CDATA[新的博客]]></title>
+    <link href="http://yoursite.com/2015/04/28/%E6%96%B0%E7%9A%84%E5%8D%9A%E5%AE%A2/"/>
+    <id>http://yoursite.com/2015/04/28/新的博客/</id>
     <published>2015-04-28T07:46:30.000Z</published>
-    <updated>2015-04-28T07:46:30.216Z</updated>
-    <content type="html"></content>
+    <updated>2015-04-28T08:23:37.244Z</updated>
+    <content type="html"><![CDATA[<ul>
+<li>new</li>
+<li>blog</li>
+</ul>
+<hr>
+<p>  新开的博客,折腾了半天<br>  <center><br>    <img src="/blog/img/blog_img/14098795763615.jpg" onclick="alert('谁点谁瓜皮');return true;"><br>  </center></p>
+]]></content>
     <summary type="html">
-    
+    <![CDATA[<ul>
+<li>new</li>
+<li>blog</li>
+</ul>
+<hr>
+<p>  新开的博客,折腾了半天<br>  <center><br>    <img src="/blog/img/blog_img/14098795763615.jpg" onclick="a]]>
     </summary>
     
   </entry>
