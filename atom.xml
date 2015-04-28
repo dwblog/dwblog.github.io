@@ -2,9 +2,9 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title><![CDATA[dw的博客]]></title>
   
-  <link href="/blog/atom.xml" rel="self"/>
+  <link href="/atom.xml" rel="self"/>
   <link href="http://yoursite.com/"/>
-  <updated>2015-04-28T09:01:23.832Z</updated>
+  <updated>2015-04-28T14:57:00.262Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,15 +15,119 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[windows下hexo-github无域名安装]]></title>
+    <link href="http://yoursite.com/2015/04/28/hexo-github%E6%97%A0%E5%9F%9F%E5%90%8D%E5%AE%89%E8%A3%85/"/>
+    <id>http://yoursite.com/2015/04/28/hexo-github无域名安装/</id>
+    <published>2015-04-28T12:06:59.000Z</published>
+    <updated>2015-04-28T14:57:00.262Z</updated>
+    <content type="html"><![CDATA[<blockquote>
+<p>太菜了,在github上使用hexo安装安装了好久，期间各种问题不断，然后不断的上网搜索，还好最后安装成功了,就把安装过程重新记录下吧.</p>
+</blockquote>
+<h1 id="1-支持文件">1.支持文件</h1><blockquote>
+<p>这个不用多说了,网上教程一大堆,需要:</p>
+</blockquote>
+<ul>
+<li><a href="http://git-scm.com/download/win" target="_blank" rel="external">git bash</a></li>
+<li><a href="https://nodejs.org/" target="_blank" rel="external">node.js</a></li>
+</ul>
+<h1 id="2-安装">2.安装</h1><blockquote>
+<p>在node.js提供的命令行窗口中输入</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="operator"><span class="keyword">install</span> hexo <span class="comment">--save</span></span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>安装完成出现如下图片</p>
+</blockquote>
+<center><br>    <img src="/img/blog_img/4月/hexo-github无域名安装/1.png"><br></center>
+
+<blockquote>
+<p>随便建立一个博客目录,输入:</p>
+</blockquote>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">hexo</span> init</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>出现如下：</p>
+</blockquote>
+<center><br>    <img src="/img/blog_img/4月/hexo-github无域名安装/2.png"><br></center>
+
+<blockquote>
+<p>然后输入:</p>
+</blockquote>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="keyword">install</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>完成安装</p>
+</blockquote>
+<p><strong><font color="black">这时，本地基本上已经搭建好了,可以在<font color="red">_config.yml</font>中修改例如博客作者,标题等一系列信息;</font></strong></p>
+<p>OK,我们来看看效果吧:运行下列命令:<br><figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo <span class="keyword">server</span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>如果运行成功的话，本地端口4000会被打开,随便在哪个浏览器上输入</p>
+</blockquote>
+<ul>
+<li><a href="http://127.0.0.1:4000" target="_blank" rel="external">http://127.0.0.1:4000</a></li>
+</ul>
+<center><br>    <img src="/img/blog_img/4月/hexo-github无域名安装/3.png"><br></center>
+
+<h1 id="3-上传">3.上传</h1><blockquote>
+<p>将生成的文件部署到github上,首先,你得有个github号.</p>
+<p>获得github号后,在全局设置那里配置SSH公钥,具体配置过程直接使用官网的教程<a href="https://help.github.com/articles/generating-ssh-keys/" target="_blank" rel="external">https://help.github.com/articles/generating-ssh-keys/</a> 这里就不多说了,配置公钥这步主要是为了让本地主机通过github的认证，否则,部署的时候会出现无权限的错误.</p>
+</blockquote>
+<p>在github上新建一个工程,建好后出现如下界面</p>
+<center><br>    <img src="/img/blog_img/4月/hexo-github无域名安装/4.png"><br></center>
+
+<p>复制好后,找到<font color="red">_config.yml</font>,添加<br><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">type</span>: git</span><br><span class="line"><span class="attribute">repo</span>: git<span class="variable">@github</span>.<span class="attribute">com</span>:dwblog/new_blog.git</span><br></pre></td></tr></table></figure></p>
+<font color="red"><strong>注意!hexo版本3.0以上的type是git,3.0以下的是github,使用hexo version查看版本,<font color="blue">如果出现ERROR Deployer not found: git,运行命令npm install hexo-deployer-git —save即可</font></strong></font>
+
+<p>然后就可以部署了,运行<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo <span class="keyword">g</span></span><br><span class="line">hexo <span class="literal">d</span></span><br></pre></td></tr></table></figure></p>
+<p>运行完毕</p>
+<center><br>    <img src="/img/blog_img/4月/hexo-github无域名安装/5.png"><br></center>
+
+<p>在github上选择刚才的项目,点setting,在下面会出现</p>
+<ul>
+<li>Your site is published at <a href="http://dwblog.github.io/new_blog" target="_blank" rel="external">http://dwblog.github.io/new_blog</a>.<br>说明部署成功</li>
+</ul>
+<h1 id="4-没有域名怎么办?">4.没有域名怎么办?</h1><blockquote>
+<p>上面的步骤相信大家在网上可以搜出来很多,所以我这里主要也就是将网上的步骤归纳了一下(因为我这里按照网上的步骤一步一步走遇到了很多问题- -!).</p>
+<p>接下来大家肯定迫不及待的打开自己的网页瞧一瞧,但是出问题了- -!,是不是像下图这样</p>
+</blockquote>
+<center><br>    <img src="/img/blog_img/4月/hexo-github无域名安装/6.png"><br></center>
+
+<blockquote>
+<p>是不是没有本地的好看,当然,你可能觉得实现了功能已经很满足了,但是,随便点一篇文章进去看看,是不是404 not found!</p>
+<p>仔细看看红框中,CSS位置错了!</p>
+</blockquote>
+<p>在网上找了好久,发现很多教程都是让申请一个域名,然后新建一个CNAME的文件,把域名倒进去,OK.但是,<strong><font color="red">没有域名怎么办?</font></strong></p>
+<p>仔细看看public中的index.html文件,发现hexo g的时候把根目录解析成了/也就是<a href="http://dwblog.github.io,不是我们的博客地址,下面介绍两种解决方法" target="_blank" rel="external">http://dwblog.github.io,不是我们的博客地址,下面介绍两种解决方法</a></p>
+<h2 id="1-_修改项目名称">1. 修改项目名称</h2><p>既然他给解析成了<a href="http://dwblog.github.io" target="_blank" rel="external">http://dwblog.github.io</a> ,那我们就直接使用<a href="http://dwblog.github.io" target="_blank" rel="external">http://dwblog.github.io</a> 作为博客地址不就可以了吗？方法是创建新项目的时候使用xxx.github.io这种项目名称，然后在重复上面的操作,即可</p>
+<h2 id="2-_修改根目录">2. 修改根目录</h2><p>这种思路是让他给解析成/new_blog不就可以了吗？方法很简单,在<font color="red">_config.yml</font>中找到<font color="red">root</font>项,然后把<font color="red">/</font>改成<font color="red">/new_blog</font>就可以了</p>
+<p><font color="GREEN"><h1><strong>这里就不上图了- -!</strong><h1><font></font></h1></h1></font></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<blockquote>
+<p>太菜了,在github上使用hexo安装安装了好久，期间各种问题不断，然后不断的上网搜索，还好最后安装成功了,就把安装过程重新记录下吧.</p>
+</blockquote>
+<h1 id="1-支持文件">1.支持文件</h1><blockquot]]>
+    </summary>
+    
+      <category term="github" scheme="http://yoursite.com/tags/github/"/>
+    
+      <category term="hexo" scheme="http://yoursite.com/tags/hexo/"/>
+    
+      <category term="windows" scheme="http://yoursite.com/tags/windows/"/>
+    
+      <category term="无域名" scheme="http://yoursite.com/tags/%E6%97%A0%E5%9F%9F%E5%90%8D/"/>
+    
+      <category term="安装" scheme="http://yoursite.com/categories/%E5%AE%89%E8%A3%85/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[新的博客]]></title>
     <link href="http://yoursite.com/2015/04/28/%E6%96%B0%E7%9A%84%E5%8D%9A%E5%AE%A2/"/>
     <id>http://yoursite.com/2015/04/28/新的博客/</id>
     <published>2015-04-28T07:46:30.000Z</published>
-    <updated>2015-04-28T09:01:23.832Z</updated>
-    <content type="html"><![CDATA[<p>  新开的博客,折腾了半天<br>  <center><br>    <img src="/blog/img/blog_img/14098795763615.jpg" onclick="alert('谁点谁瓜皮');return true;"><br>  </center></p>
+    <updated>2015-04-28T15:00:06.172Z</updated>
+    <content type="html"><![CDATA[<p>  新开的博客,折腾了半天<br>  <center><br>    <img src="/img/blog_img/4月/新的博客/14098795763615.jpg" onclick="alert('谁点谁瓜皮');return true;"><br>  </center></p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>  新开的博客,折腾了半天<br>  <center><br>    <img src="/blog/img/blog_img/14098795763615.jpg" onclick="alert('谁点谁瓜皮');return true;"><br>  </center>]]>
+    <![CDATA[<p>  新开的博客,折腾了半天<br>  <center><br>    <img src="/img/blog_img/4月/新的博客/14098795763615.jpg" onclick="alert('谁点谁瓜皮');return true;"><br>  </cent]]>
     </summary>
     
       <category term="blog" scheme="http://yoursite.com/tags/blog/"/>
