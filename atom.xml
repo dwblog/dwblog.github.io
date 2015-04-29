@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yoursite.com/"/>
-  <updated>2015-04-28T14:57:00.262Z</updated>
+  <updated>2015-04-28T14:57:00.483Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://yoursite.com/2015/04/28/hexo-github%E6%97%A0%E5%9F%9F%E5%90%8D%E5%AE%89%E8%A3%85/"/>
     <id>http://yoursite.com/2015/04/28/hexo-github无域名安装/</id>
     <published>2015-04-28T12:06:59.000Z</published>
-    <updated>2015-04-28T14:57:00.262Z</updated>
+    <updated>2015-04-28T14:57:00.483Z</updated>
     <content type="html"><![CDATA[<blockquote>
 <p>太菜了,在github上使用hexo安装安装了好久，期间各种问题不断，然后不断的上网搜索，还好最后安装成功了,就把安装过程重新记录下吧.</p>
 </blockquote>
@@ -123,7 +123,7 @@
     <link href="http://yoursite.com/2015/04/28/%E6%96%B0%E7%9A%84%E5%8D%9A%E5%AE%A2/"/>
     <id>http://yoursite.com/2015/04/28/新的博客/</id>
     <published>2015-04-28T07:46:30.000Z</published>
-    <updated>2015-04-28T15:00:06.172Z</updated>
+    <updated>2015-04-28T15:00:06.394Z</updated>
     <content type="html"><![CDATA[<p>  新开的博客,折腾了半天<br>  <center><br>    <img src="/img/blog_img/4月/新的博客/14098795763615.jpg" onclick="alert('谁点谁瓜皮');return true;"><br>  </center></p>
 ]]></content>
     <summary type="html">
