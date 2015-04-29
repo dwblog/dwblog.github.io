@@ -4,22 +4,34 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>dw的博客</title>
+    <title>表单劫持 | dw的博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="dw">
     
 
     
-    <meta name="description">
-<meta property="og:type" content="website">
-<meta property="og:title" content="dw的博客">
-<meta property="og:url" content="http://yoursite.com/index.html">
+    <meta name="description" content="今天看到了表单劫持,于是想在XSS平台上创建一个表单劫持的项目,使用的平台是http://xss.hacktask.net/ 
+
+在网上找了一下表单劫持方面的资料,思路大多是配合xss.js公共模块,通过修改form表单里action的地址为自己的Form.php中,通过解析$_POST的内容达到劫持表单的功能.有兴趣的朋友自己搜索下,这里主要介绍使用Javascript进行表单劫持,这种方法的缺">
+<meta property="og:type" content="article">
+<meta property="og:title" content="表单劫持">
+<meta property="og:url" content="http://yoursite.com/2015/04/29/表单劫持/index.html">
 <meta property="og:site_name" content="dw的博客">
-<meta property="og:description">
+<meta property="og:description" content="今天看到了表单劫持,于是想在XSS平台上创建一个表单劫持的项目,使用的平台是http://xss.hacktask.net/ 
+
+在网上找了一下表单劫持方面的资料,思路大多是配合xss.js公共模块,通过修改form表单里action的地址为自己的Form.php中,通过解析$_POST的内容达到劫持表单的功能.有兴趣的朋友自己搜索下,这里主要介绍使用Javascript进行表单劫持,这种方法的缺">
+<meta property="og:image" content="/img/blog_img/4月/表单劫持/1.png">
+<meta property="og:image" content="/img/blog_img/4月/表单劫持/2.png">
+<meta property="og:image" content="/img/blog_img/4月/表单劫持/3.png">
+<meta property="og:image" content="/img/blog_img/4月/表单劫持/4.png">
+<meta property="og:image" content="/img/blog_img/4月/表单劫持/5.png">
+<meta property="og:image" content="/img/blog_img/4月/表单劫持/6.png">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="dw的博客">
-<meta name="twitter:description">
+<meta name="twitter:title" content="表单劫持">
+<meta name="twitter:description" content="今天看到了表单劫持,于是想在XSS平台上创建一个表单劫持的项目,使用的平台是http://xss.hacktask.net/ 
+
+在网上找了一下表单劫持方面的资料,思路大多是配合xss.js公共模块,通过修改form表单里action的地址为自己的Form.php中,通过解析$_POST的内容达到劫持表单的功能.有兴趣的朋友自己搜索下,这里主要介绍使用Javascript进行表单劫持,这种方法的缺">
 
     
     <link rel="alternative" href="/atom.xml" title="dw的博客" type="application/atom+xml">
@@ -72,12 +84,10 @@
 </div>
     </header>
     <div id="container">
-      <div id="main">
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
   <h1 itemprop="name">
     
       <a href="/2015/04/29/表单劫持/" title="表单劫持" itemprop="url">表单劫持</a>
@@ -91,9 +101,16 @@
     
   </p>
 </header>
-    <div class="article-content">
-        
-        <pre><code>今天看到了表单劫持,于是想在XSS平台上创建一个表单劫持的项目,使用的平台是<span class="string">http:</span><span class="comment">//xss.hacktask.net/ </span>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#思路"><span class="toc-number">1.</span> <span class="toc-text">思路</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#模块配置"><span class="toc-number">2.</span> <span class="toc-text">模块配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#演示"><span class="toc-number">3.</span> <span class="toc-text">演示</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#缺点"><span class="toc-number">4.</span> <span class="toc-text">缺点</span></a></li></ol>
+		
+		</div>
+		
+		<pre><code>今天看到了表单劫持,于是想在XSS平台上创建一个表单劫持的项目,使用的平台是<span class="string">http:</span><span class="comment">//xss.hacktask.net/ </span>
 </code></pre><blockquote>
 <p>在网上找了一下表单劫持方面的资料,思路<font color="red">大多是配合xss.js公共模块,通过修改form表单里action的地址为自己的Form.php中,通过解析$_POST的内容达到劫持表单的功能.</font>有兴趣的朋友自己搜索下,这里主要介绍使用Javascript进行表单劫持,这种方法的<font color="blue">缺点会在后面给出.</font></p>
 </blockquote>
@@ -142,14 +159,9 @@
 <h1 id="缺点">缺点</h1><blockquote>
 <p>看到这里,缺点大家应该也知道了,在输入的时候不管你的用户名密码是否正确,都会上传到XSS平台,也就是说,你截获到的账号密码不一定是正确的</p>
 </blockquote>
-<font size="30" color="green">祝大家好运^-^</font>
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
+<font size="30" color="green">祝大家好运^-^</font>  
+	</div>
+		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
 <div class="article-categories">
@@ -167,230 +179,49 @@
 
 
 
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://yoursite.com/2015/04/29/表单劫持/" data-title="表单劫持 | dw的博客" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
 
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/29/表单劫持/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
 
 </footer>
 
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
 
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/28/hexo-github无域名安装/" title="windows下hexo-github无域名安装" itemprop="url">windows下hexo-github无域名安装</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="dw" target="_blank" itemprop="author">dw</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-28T12:06:59.000Z" itemprop="datePublished"> 发表于 2015-04-28</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <blockquote>
-<p>太菜了,在github上使用hexo安装安装了好久，期间各种问题不断，然后不断的上网搜索，还好最后安装成功了,就把安装过程重新记录下吧.</p>
-</blockquote>
-<h1 id="1-支持文件">1.支持文件</h1><blockquote>
-<p>这个不用多说了,网上教程一大堆,需要:</p>
-</blockquote>
-<ul>
-<li><a href="http://git-scm.com/download/win" target="_blank" rel="external">git bash</a></li>
-<li><a href="https://nodejs.org/" target="_blank" rel="external">node.js</a></li>
-</ul>
-<h1 id="2-安装">2.安装</h1><blockquote>
-<p>在node.js提供的命令行窗口中输入</p>
-</blockquote>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="operator"><span class="keyword">install</span> hexo <span class="comment">--save</span></span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>安装完成出现如下图片</p>
-</blockquote>
-<center><br>    <img src="/img/blog_img/4月/hexo-github无域名安装/1.png"><br></center>
-
-<blockquote>
-<p>随便建立一个博客目录,输入:</p>
-</blockquote>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">hexo</span> init</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>出现如下：</p>
-</blockquote>
-<center><br>    <img src="/img/blog_img/4月/hexo-github无域名安装/2.png"><br></center>
-
-<blockquote>
-<p>然后输入:</p>
-</blockquote>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="keyword">install</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>完成安装</p>
-</blockquote>
-<p><strong><font color="black">这时，本地基本上已经搭建好了,可以在<font color="red">_config.yml</font>中修改例如博客作者,标题等一系列信息;</font></strong></p>
-<p>OK,我们来看看效果吧:运行下列命令:<br><figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo <span class="keyword">server</span></span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p>如果运行成功的话，本地端口4000会被打开,随便在哪个浏览器上输入</p>
-</blockquote>
-<ul>
-<li><a href="http://127.0.0.1:4000" target="_blank" rel="external">http://127.0.0.1:4000</a></li>
-</ul>
-<center><br>    <img src="/img/blog_img/4月/hexo-github无域名安装/3.png"><br></center>
-
-<h1 id="3-上传">3.上传</h1><blockquote>
-<p>将生成的文件部署到github上,首先,你得有个github号.</p>
-<p>获得github号后,在全局设置那里配置SSH公钥,具体配置过程直接使用官网的教程<a href="https://help.github.com/articles/generating-ssh-keys/" target="_blank" rel="external">https://help.github.com/articles/generating-ssh-keys/</a> 这里就不多说了,配置公钥这步主要是为了让本地主机通过github的认证，否则,部署的时候会出现无权限的错误.</p>
-</blockquote>
-<p>在github上新建一个工程,建好后出现如下界面</p>
-<center><br>    <img src="/img/blog_img/4月/hexo-github无域名安装/4.png"><br></center>
-
-<p>复制好后,找到<font color="red">_config.yml</font>,添加<br><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">type</span>: git</span><br><span class="line"><span class="attribute">repo</span>: git<span class="variable">@github</span>.<span class="attribute">com</span>:dwblog/new_blog.git</span><br></pre></td></tr></table></figure></p>
-<font color="red"><strong>注意!hexo版本3.0以上的type是git,3.0以下的是github,使用hexo version查看版本,<font color="blue">如果出现ERROR Deployer not found: git,运行命令npm install hexo-deployer-git —save即可</font></strong></font>
-
-<p>然后就可以部署了,运行<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo <span class="keyword">g</span></span><br><span class="line">hexo <span class="literal">d</span></span><br></pre></td></tr></table></figure></p>
-<p>运行完毕</p>
-<center><br>    <img src="/img/blog_img/4月/hexo-github无域名安装/5.png"><br></center>
-
-<p>在github上选择刚才的项目,点setting,在下面会出现</p>
-<ul>
-<li>Your site is published at <a href="http://dwblog.github.io/new_blog" target="_blank" rel="external">http://dwblog.github.io/new_blog</a>.<br>说明部署成功</li>
-</ul>
-<h1 id="4-没有域名怎么办?">4.没有域名怎么办?</h1><blockquote>
-<p>上面的步骤相信大家在网上可以搜出来很多,所以我这里主要也就是将网上的步骤归纳了一下(因为我这里按照网上的步骤一步一步走遇到了很多问题- -!).</p>
-<p>接下来大家肯定迫不及待的打开自己的网页瞧一瞧,但是出问题了- -!,是不是像下图这样</p>
-</blockquote>
-<center><br>    <img src="/img/blog_img/4月/hexo-github无域名安装/6.png"><br></center>
-
-<blockquote>
-<p>是不是没有本地的好看,当然,你可能觉得实现了功能已经很满足了,但是,随便点一篇文章进去看看,是不是404 not found!</p>
-<p>仔细看看红框中,CSS位置错了!</p>
-</blockquote>
-<p>在网上找了好久,发现很多教程都是让申请一个域名,然后新建一个CNAME的文件,把域名倒进去,OK.但是,<strong><font color="red">没有域名怎么办?</font></strong></p>
-<p>仔细看看public中的index.html文件,发现hexo g的时候把根目录解析成了/也就是<a href="http://dwblog.github.io,不是我们的博客地址,下面介绍两种解决方法" target="_blank" rel="external">http://dwblog.github.io,不是我们的博客地址,下面介绍两种解决方法</a></p>
-<h2 id="1-_修改项目名称">1. 修改项目名称</h2><p>既然他给解析成了<a href="http://dwblog.github.io" target="_blank" rel="external">http://dwblog.github.io</a> ,那我们就直接使用<a href="http://dwblog.github.io" target="_blank" rel="external">http://dwblog.github.io</a> 作为博客地址不就可以了吗？方法是创建新项目的时候使用xxx.github.io这种项目名称，然后在重复上面的操作,即可</p>
-<h2 id="2-_修改根目录">2. 修改根目录</h2><p>这种思路是让他给解析成/new_blog不就可以了吗？方法很简单,在<font color="red">_config.yml</font>中找到<font color="red">root</font>项,然后把<font color="red">/</font>改成<font color="red">/new_blog</font>就可以了</p>
-<p><font color="GREEN"><h1><strong>这里就不上图了- -!</strong><h1><font></font></h1></h1></font></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/安装/">安装</a>
+<div class="next">
+<a href="/2015/04/28/hexo-github无域名安装/"  title="windows下hexo-github无域名安装">
+ <strong>下一篇：</strong><br/> 
+ <span>windows下hexo-github无域名安装
+</span>
+</a>
 </div>
 
+</nav>
 
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/github/">github</a><a href="/tags/hexo/">hexo</a><a href="/tags/windows/">windows</a><a href="/tags/无域名/">无域名</a>
+	
+
+<section id="comments" class="comment">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
   </div>
+</section>
 
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/28/hexo-github无域名安装/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/28/新的博客/" title="新的博客" itemprop="url">新的博客</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="dw" target="_blank" itemprop="author">dw</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-28T07:46:30.000Z" itemprop="datePublished"> 发表于 2015-04-28</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>  新开的博客,折腾了半天<br>  <center><br>    <img src="/img/blog_img/4月/新的博客/14098795763615.jpg" onclick="alert('谁点谁瓜皮');return true;"><br>  </center></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/日志/">日志</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/blog/">blog</a><a href="/tags/new/">new</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/28/新的博客/#disqus_thread" class="comments-count-link">Comments</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-
-</div>
+</div>  
       <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#思路"><span class="toc-number">1.</span> <span class="toc-text">思路</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#模块配置"><span class="toc-number">2.</span> <span class="toc-text">模块配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#演示"><span class="toc-number">3.</span> <span class="toc-text">演示</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#缺点"><span class="toc-number">4.</span> <span class="toc-text">缺点</span></a></li></ol>
+ 
+  </div>
 
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
@@ -586,12 +417,69 @@ $(document).ready(function(){
       m.removeClass('moveMain');
       a.css('display', 'block').removeClass('fadeOut');
       o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
         
     }
   });
 });
 </script>
 
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
 
 
 
@@ -677,4 +565,4 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <!-- Tiny_search End -->
 
   </body>
- </html>
+</html>
