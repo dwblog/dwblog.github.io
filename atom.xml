@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yoursite.com/"/>
-  <updated>2015-04-30T06:37:34.276Z</updated>
+  <updated>2015-05-02T12:18:20.319Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -13,6 +13,82 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[OD消息断点]]></title>
+    <link href="http://yoursite.com/2015/05/02/OD%E6%B6%88%E6%81%AF%E6%96%AD%E7%82%B9/"/>
+    <id>http://yoursite.com/2015/05/02/OD消息断点/</id>
+    <published>2015-05-02T11:23:18.000Z</published>
+    <updated>2015-05-02T12:18:20.319Z</updated>
+    <content type="html"><![CDATA[<pre><code>给大家介绍下<span class="variable">OD</span>中怎么设置消息断点吧.
+</code></pre><h1 id="原始程序">原始程序</h1><blockquote>
+<p>随便写一个对话框程序给大家演示一下吧.</p>
+</blockquote>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;Windows.h&gt;</span><br><span class="line">#include <span class="string">"resource.h"</span></span><br><span class="line"></span><br><span class="line">BOOL <span class="function">CALLBACK <span class="title">DialogProc</span><span class="params">(HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">switch</span>(msg)</span><br><span class="line">	&#123;</span><br><span class="line">	<span class="keyword">case</span> WM_COMMAND:</span><br><span class="line">		<span class="keyword">switch</span>(LOWORD(wParam))</span><br><span class="line">		&#123;</span><br><span class="line">		<span class="keyword">case</span> IDOK:</span><br><span class="line">			MessageBox(0,<span class="string">"OK"</span>,<span class="string">"OK"</span>,0);</span><br><span class="line">			<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	<span class="keyword">case</span> WM_SYSCOMMAND:</span><br><span class="line">		<span class="keyword">if</span>(LOWORD(wParam)==SC_CLOSE)</span><br><span class="line">		&#123;</span><br><span class="line">			MessageBox(<span class="number">0</span>,<span class="string">"Exit"</span>,<span class="string">"OK"</span>,<span class="number">0</span>);</span><br><span class="line">			EndDialog(hWnd,<span class="number">0</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	DialogBox(<span class="number">0</span>,MAKEINTRESOURCE(IDD_DIALOG1),<span class="number">0</span>,DialogProc);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>程序很简单，点击OK按钮出来一个提示框</p>
+</blockquote>
+<h1 id="OD中截获WM_COMMAND消息">OD中截获WM_COMMAND消息</h1><blockquote>
+<p>开始想着是OD中选择查看-&gt;窗口,会显示当前应用程序的各个窗口,那直接找窗口处理函数,直接设断不就行了吗？很不幸,这样不行,看看下图</p>
+</blockquote>
+<center><br>    <img src="/img/blog_img/5月/1.png"><br></center>
+
+<blockquote>
+<p>确实有确定,取消这几个按钮,而且也有我们的Dialog对话框,但是貌似处理函数跑飞了,我们自己写的处理函数怎么会位于USER32.DLL的加载空间呢？不用问，不是这个,<font color="red">仔细看下,上面写的是ClsProc,而且左边还有个WinProc</font>,我的理解是<font color="red">WinProc</font>才是你自己写的函数,但是这里OD没检测出来,那么<font color="red">ClsProc</font>是什么呢？我的理解是,在RegisterClassEx中使用的WNDCLASSEX结构体中的窗口处理函数,那么,调用顺序是怎样的呢?<font color="red">Windows会首先调用ClsProc中的处理函数,再由这个函数将消息转发给咱们自己定义的函数.</font></p>
+</blockquote>
+<ul>
+<li>说了这么多,其实总结下来就一句话:<font color="BLUE">这个ClsProc不一定靠谱</font>,当然,<font color="BLUE">一些情况下还是可以用他的</font></li>
+</ul>
+<blockquote>
+<p>那么,怎么办呢？这里给大家介绍两种方法.</p>
+</blockquote>
+<h1 id="内存断点法">内存断点法</h1><ul>
+<li><p>上面讲过,系统会<font color="RED">先调用这个ClsProc,然后再调用我们自己提供的函数</font>.看看地址空间,ClsProc显而易见是在USER32.DLL的空间(之前听有些说法是把它叫做系统空间,其实个人感觉这个不能叫系统空间,<font color="BLUE">系统空间是指你运行了特权指令,int 0x2e,sysenter以后CPU进入0环以后的空间</font>),而我们自己提供的函数肯定是位于当前应用程序的空间了,我们的目的就是找到他！</p>
+</li>
+<li><p>首先,在ClsProc的位置下条件断点.</p>
+</li>
+</ul>
+<center><br>    <center><br>        <img src="/img/blog_img/5月/2.jpg"><br>    </center><br></center>
+
+<blockquote>
+<p>这里注意两点,第一个是地址77D3E577,由于动态链接库每次加载的位置都不一样，所以这个值可能是会变的;第二个是[esp+4]的值,也就是句柄值,这里也是不确定的,我是怎么得到这个值的呢？<font color="RED">注意看堆栈</font>,不多解释.</p>
+</blockquote>
+<ul>
+<li>点击确定后,程序断在这里,然后ALT+M打开内存,在代码区设断</li>
+</ul>
+<center><br>    <center><br>        <img src="/img/blog_img/5月/3.png"><br>    </center><br></center>
+
+<ul>
+<li>点击运行:</li>
+</ul>
+<center><br>    <center><br>        <img src="/img/blog_img/5月/4.png"><br>    </center><br></center>
+
+<font size="30" color="GREEN">OK</font>
+
+<h1 id="函数断点法">函数断点法</h1><blockquote>
+<p>首先问一个问题:Windows系统在显示对话框时会调用什么函数?你可能想说DialogBoxA,DialogBoxW,对不起,<font color="RED">不是这两个,这两个其实不叫函数,他们只是宏定义,系统会调用DialogBoxParamA,或者DialogBoxParamW</font>.看先调用接口:</p>
+</blockquote>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">DialogBoxParam</span><span class="params">(</span><br><span class="line">HINSTANCE hInstance,</span><br><span class="line">LPCTSTR lpTemplateName, </span><br><span class="line">HWND hWndParent,</span><br><span class="line">DLGPROC lpDialogFunc,</span><br><span class="line">PARAM dwInitParam)</span></span>;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>思路有了吧,直接在这个函数上设断,[ESP+0x10]的值就是我们要找的了.</p>
+</blockquote>
+<font size="30" color="BLUE">That’s all</font>]]></content>
+    <summary type="html">
+    <![CDATA[<pre><code>给大家介绍下<span class="variable">OD</span>中怎么设置消息断点吧.
+</code></pre><h1 id="原始程序">原始程序</h1><blockquote>
+<p>随便写一个对话框程序给大家演示一下吧.</p>
+</b]]>
+    </summary>
+    
+      <category term="C语言" scheme="http://yoursite.com/tags/C%E8%AF%AD%E8%A8%80/"/>
+    
+      <category term="OD" scheme="http://yoursite.com/tags/OD/"/>
+    
+      <category term="逆向工程" scheme="http://yoursite.com/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/"/>
+    
+      <category term="逆向工程" scheme="http://yoursite.com/categories/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[表单劫持]]></title>

