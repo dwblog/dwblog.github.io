@@ -110,7 +110,7 @@
 <p>确实有确定,取消这几个按钮,而且也有我们的Dialog对话框,但是貌似处理函数跑飞了,我们自己写的处理函数怎么会位于USER32.DLL的加载空间呢？不用问，不是这个,<font color="red">仔细看下,上面写的是ClsProc,而且左边还有个WinProc</font>,我的理解是<font color="red">WinProc</font>才是你自己写的函数,但是这里OD没检测出来,那么<font color="red">ClsProc</font>是什么呢？我的理解是,在RegisterClassEx中使用的WNDCLASSEX结构体中的窗口处理函数,那么,调用顺序是怎样的呢?<font color="red">Windows会首先调用ClsProc中的处理函数,再由这个函数将消息转发给咱们自己定义的函数.</font></p>
 </blockquote>
 <ul>
-<li>说了这么多,其实总结下来就一句话:<font color="BLUE">这个ClsProc不一定靠谱</font>,当然,<font color="BLUE">一些情况下还是可以用他的</font></li>
+<li>说了这么多,其实总结下来就一句话:<font color="BLUE">这个ClsProc不一定靠谱</font>,当然,<font color="BLUE">一些情况下还是可以用他的,如果他可以用的话,就可以直接使用OD提供的设置消息断点的方式</font></li>
 </ul>
 <blockquote>
 <p>那么,怎么办呢？这里给大家介绍两种方法.</p>
