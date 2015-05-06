@@ -25,10 +25,10 @@
 随便写一个对话框程序给大家演示一下吧.
 
 12345678910111213141516171819202122232425262728#include &amp;lt;Windows.h&amp;gt;#include &quot;resource.h&quot;BOOL CALLBACK DialogProc(HWND hW">
-<meta property="og:image" content="/img/blog_img/5月/1.png">
-<meta property="og:image" content="/img/blog_img/5月/2.jpg">
-<meta property="og:image" content="/img/blog_img/5月/3.png">
-<meta property="og:image" content="/img/blog_img/5月/4.png">
+<meta property="og:image" content="/img/blog_img/5月/消息断点/1.png">
+<meta property="og:image" content="/img/blog_img/5月/消息断点/2.jpg">
+<meta property="og:image" content="/img/blog_img/5月/消息断点/3.png">
+<meta property="og:image" content="/img/blog_img/5月/消息断点/4.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OD消息断点">
 <meta name="twitter:description" content="给大家介绍下OD中怎么设置消息断点吧,本文只针对C/C++程序,别的语言写的程序有更好的办法.
@@ -125,7 +125,7 @@
 <h1 id="OD中截获WM_COMMAND消息">OD中截获WM_COMMAND消息</h1><blockquote>
 <p>开始想着是OD中选择查看-&gt;窗口,会显示当前应用程序的各个窗口,那直接找窗口处理函数,直接设断不就行了吗？很不幸,这样不行,看看下图</p>
 </blockquote>
-<center><br>    <img src="/img/blog_img/5月/1.png"><br></center>
+<center><br>    <img src="/img/blog_img/5月/消息断点/1.png"><br></center>
 
 <blockquote>
 <p>确实有确定,取消这几个按钮,而且也有我们的Dialog对话框,但是貌似处理函数跑飞了,我们自己写的处理函数怎么会位于USER32.DLL的加载空间呢？不用问，不是这个,<font color="red">仔细看下,上面写的是ClsProc,而且左边还有个WinProc</font>,我的理解是<font color="red">WinProc</font>才是你自己写的函数,但是这里OD没检测出来,那么<font color="red">ClsProc</font>是什么呢？我的理解是,在RegisterClassEx中使用的WNDCLASSEX结构体中的窗口处理函数,那么,调用顺序是怎样的呢?<font color="red">Windows会首先调用ClsProc中的处理函数,再由这个函数将消息转发给咱们自己定义的函数.</font></p>
@@ -142,7 +142,7 @@
 <li><p>首先,在ClsProc的位置下条件断点.</p>
 </li>
 </ul>
-<center><br>    <center><br>        <img src="/img/blog_img/5月/2.jpg"><br>    </center><br></center>
+<center><br>    <center><br>        <img src="/img/blog_img/5月/消息断点/2.jpg"><br>    </center><br></center>
 
 <blockquote>
 <p>这里注意两点,第一个是地址77D3E577,由于动态链接库每次加载的位置都不一样，所以这个值可能是会变的;第二个是[esp+4]的值,也就是句柄值,这里也是不确定的,我是怎么得到这个值的呢？<font color="RED">注意看堆栈</font>,不多解释.</p>
@@ -150,12 +150,12 @@
 <ul>
 <li>点击确定后,程序断在这里,然后ALT+M打开内存,在代码区设断</li>
 </ul>
-<center><br>    <center><br>        <img src="/img/blog_img/5月/3.png"><br>    </center><br></center>
+<center><br>    <center><br>        <img src="/img/blog_img/5月/消息断点/3.png"><br>    </center><br></center>
 
 <ul>
 <li>点击运行:</li>
 </ul>
-<center><br>    <center><br>        <img src="/img/blog_img/5月/4.png"><br>    </center><br></center>
+<center><br>    <center><br>        <img src="/img/blog_img/5月/消息断点/4.png"><br>    </center><br></center>
 
 <font size="30" color="GREEN">OK</font>
 
@@ -201,6 +201,14 @@
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/2015/05/06/C语言编写进程转储工具/" title="C语言编写进程转储工具">
+  <strong>上一篇：</strong><br/>
+  <span>
+  C语言编写进程转储工具</span>
+</a>
+</div>
+
 
 <div class="next">
 <a href="/2015/04/29/表单劫持/"  title="表单劫持">
@@ -213,12 +221,10 @@
 </nav>
 
 	
-
 <section id="comments" class="comment">
-  <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+	<div class="ds-thread" data-thread-key="2015/05/02/OD消息断点/" data-title="OD消息断点" data-url="http://yoursite.com/2015/05/02/OD消息断点/"></div>
 </section>
+
 
 </div>  
       <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
@@ -252,7 +258,7 @@
 		  
 		
 		  
-			<li><a href="/categories/逆向工程/" title="逆向工程">逆向工程<sup>1</sup></a></li>
+			<li><a href="/categories/逆向工程/" title="逆向工程">逆向工程<sup>2</sup></a></li>
 		  
 		
 		</ul>
@@ -265,15 +271,11 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/new/" title="new">new<sup>1</sup></a></li>
+				<li><a href="/tags/逆向工程/" title="逆向工程">逆向工程<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/逆向工程/" title="逆向工程">逆向工程<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/C语言/" title="C语言">C语言<sup>1</sup></a></li>
+				<li><a href="/tags/C语言/" title="C语言">C语言<sup>2</sup></a></li>
 			
 		
 			
@@ -289,11 +291,11 @@
 			
 		
 			
-				<li><a href="/tags/OD/" title="OD">OD<sup>1</sup></a></li>
+				<li><a href="/tags/new/" title="new">new<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/blog/" title="blog">blog<sup>1</sup></a></li>
+				<li><a href="/tags/OD/" title="OD">OD<sup>1</sup></a></li>
 			
 		
 			
@@ -310,6 +312,10 @@
 		
 			
 				<li><a href="/tags/windows/" title="windows">windows<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/blog/" title="blog">blog<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -506,26 +512,18 @@ $(document).ready(function(){
 
 
 
-
 <script type="text/javascript">
+  var duoshuoQuery = {short_name:"dwsblog"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
 
-var disqus_shortname = 'dwdisc';
-
-(function(){
-  var dsq = document.createElement('script');
-  dsq.type = 'text/javascript';
-  dsq.async = true;
-  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-}());
-(function(){
-  var dsq = document.createElement('script');
-  dsq.type = 'text/javascript';
-  dsq.async = true;
-  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
-  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-}());
-</script>
 
 
 

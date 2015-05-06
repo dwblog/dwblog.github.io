@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yoursite.com/"/>
-  <updated>2015-05-02T12:35:15.057Z</updated>
+  <updated>2015-05-06T15:50:08.459Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,11 +15,62 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[C语言编写进程转储工具]]></title>
+    <link href="http://yoursite.com/2015/05/06/C%E8%AF%AD%E8%A8%80%E7%BC%96%E5%86%99%E8%BF%9B%E7%A8%8B%E8%BD%AC%E5%82%A8%E5%B7%A5%E5%85%B7/"/>
+    <id>http://yoursite.com/2015/05/06/C语言编写进程转储工具/</id>
+    <published>2015-05-06T14:40:46.000Z</published>
+    <updated>2015-05-06T15:50:08.459Z</updated>
+    <content type="html"><![CDATA[<pre><code>今天破解软件时<span class="variable">LoadPE</span>突然不能用了- -<span class="exclamation_mark">!</span>,没办法,要转储文件,自己写一个吧.
+</code></pre><font size="30" color="red">代码就不公开了,不献丑了</font><br><hr color="red"><br><br>&gt; 编写主要分为下面几个步骤,<br><br><figure class="highlight erlang-repl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">加载进程;</span><br><span class="line">读取进程模块,取可执行文件的映像;</span><br><span class="line">读取进程当前内存;</span><br><span class="line">对<span class="variable">PE</span>头稍加修改,转储<span class="exclamation_mark">!</span></span><br></pre></td></tr></table></figure><br><br># 加载进程<br><br>&gt; 这个不多说了,找到进程PID,直接OpenProcess会给你返回一个进程句柄,下面的操作都要用这个句柄.至于PID怎么获得?想要编程的话使用<font color="red">Process32First,Process32Next</font>,想偷懒的话直接使用<font color="red">tasklist</font>
+
+<h1 id="读取进程模块">读取进程模块</h1><blockquote>
+<p>这里微软已经我们准备好了,有个API叫<font color="red">Module32First,Module32Next</font>,至于怎么用,MSDN上说的很清楚,一般来说Module32First返回的 MODULEENTRY32 就是可执行映像文件,没办法,创建进程的时候他总是第一个加载的啊,别的DLL都是为他服务的.</p>
+</blockquote>
+<h1 id="读取进程到内存">读取进程到内存</h1><blockquote>
+<p>这里唯一需要注意的一点是:读取的时候可能需要设置权限,使用<font color="red">VirtualProtectEx</font>设置权限,使用<font color="red">ReadProcessMemory</font>读取内存,记得设置完以后用<font color="red">VirtualProtectEx</font>改回去^-^</p>
+</blockquote>
+<h1 id="转储">转储</h1><blockquote>
+<p>好了,进程的可执行文件的内存映像已经被我们读取下来了,这个时候先别急着存储,因为还有一些事要做.大家观察下LoadPE转储下来的文件,有一个规律</p>
+</blockquote>
+<center><br>    <img src="/img/blog_img/5月/转储/1.png"><br></center>
+
+<font color="RED">V.offset与R.offset,V.Size与R.Size一样吧</font>
+
+<blockquote>
+<p>顺便说下,V.offset指的是程序加载到内存以后RVA(相对虚拟地址),R.offset是指程序在文件中实际的偏移地址,R.offset指实际大小,V.size指加载到内存以后的大小.一般程序这两组值是不相等的,但是为什么转储以后相等了呢?</p>
+</blockquote>
+<font color="blue">这里个人觉得是作者偷了一下懒,因为加壳过程中,不能保证文件的大小不变,特别是压缩壳,是要尽可能减小程序在硬盘中的存储大小的,所以,一般壳都会去修改这个R.offset,R.size,让他们使用加壳以后比较合适的值,从而达到压缩,加密的目的,换句话说,<font color="red">这里的R.offset,R.size并不是未加壳前程序的偏移值及大小!</font>所以说,直接保存很大可能性会出错!</font>
+
+<blockquote>
+<p>怎么办呢？</p>
+</blockquote>
+<ul>
+<li>比较麻烦的方法是:既然程序已经解密完毕了(转储时务必确保到达OEP!),那我们能不能算出来较为合适的R.offset以及R.size呢？当然可以!</li>
+<li>比较简单的方法是:直接让R.offset=V.offset,R.size=V.size,V.size肯定是要大于R.size的,所以这样做无非就是多占一点空间而已(这也是为什么转储后的文件都要大于原文件),但是很保险,不会出错.</li>
+</ul>
+<blockquote>
+<p>修改完每个SECTION的R.offset以及R.size后,如果有必要,修改下PE头中的ImageSize,保存文件,大功告成(当然修复输入表就是另外一回事了).</p>
+</blockquote>
+<font color="GREEN" size="30">祝大家开心</font>]]></content>
+    <summary type="html">
+    <![CDATA[<pre><code>今天破解软件时<span class="variable">LoadPE</span>突然不能用了- -<span class="exclamation_mark">!</span>,没办法,要转储文件,自己写一个吧.
+</code></pre><font ]]>
+    </summary>
+    
+      <category term="C语言" scheme="http://yoursite.com/tags/C%E8%AF%AD%E8%A8%80/"/>
+    
+      <category term="逆向工程" scheme="http://yoursite.com/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/"/>
+    
+      <category term="逆向工程" scheme="http://yoursite.com/categories/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[OD消息断点]]></title>
     <link href="http://yoursite.com/2015/05/02/OD%E6%B6%88%E6%81%AF%E6%96%AD%E7%82%B9/"/>
     <id>http://yoursite.com/2015/05/02/OD消息断点/</id>
     <published>2015-05-02T11:23:18.000Z</published>
-    <updated>2015-05-02T12:35:15.057Z</updated>
+    <updated>2015-05-06T15:31:34.213Z</updated>
     <content type="html"><![CDATA[<pre><code>给大家介绍下OD中怎么设置消息断点吧,本文只针对<span class="keyword">C</span>/<span class="keyword">C</span>++程序,别的语言写的程序有更好的办法.
 </code></pre><h1 id="原始程序">原始程序</h1><blockquote>
 <p>随便写一个对话框程序给大家演示一下吧.</p>
@@ -31,7 +82,7 @@
 <h1 id="OD中截获WM_COMMAND消息">OD中截获WM_COMMAND消息</h1><blockquote>
 <p>开始想着是OD中选择查看-&gt;窗口,会显示当前应用程序的各个窗口,那直接找窗口处理函数,直接设断不就行了吗？很不幸,这样不行,看看下图</p>
 </blockquote>
-<center><br>    <img src="/img/blog_img/5月/1.png"><br></center>
+<center><br>    <img src="/img/blog_img/5月/消息断点/1.png"><br></center>
 
 <blockquote>
 <p>确实有确定,取消这几个按钮,而且也有我们的Dialog对话框,但是貌似处理函数跑飞了,我们自己写的处理函数怎么会位于USER32.DLL的加载空间呢？不用问，不是这个,<font color="red">仔细看下,上面写的是ClsProc,而且左边还有个WinProc</font>,我的理解是<font color="red">WinProc</font>才是你自己写的函数,但是这里OD没检测出来,那么<font color="red">ClsProc</font>是什么呢？我的理解是,在RegisterClassEx中使用的WNDCLASSEX结构体中的窗口处理函数,那么,调用顺序是怎样的呢?<font color="red">Windows会首先调用ClsProc中的处理函数,再由这个函数将消息转发给咱们自己定义的函数.</font></p>
@@ -48,7 +99,7 @@
 <li><p>首先,在ClsProc的位置下条件断点.</p>
 </li>
 </ul>
-<center><br>    <center><br>        <img src="/img/blog_img/5月/2.jpg"><br>    </center><br></center>
+<center><br>    <center><br>        <img src="/img/blog_img/5月/消息断点/2.jpg"><br>    </center><br></center>
 
 <blockquote>
 <p>这里注意两点,第一个是地址77D3E577,由于动态链接库每次加载的位置都不一样，所以这个值可能是会变的;第二个是[esp+4]的值,也就是句柄值,这里也是不确定的,我是怎么得到这个值的呢？<font color="RED">注意看堆栈</font>,不多解释.</p>
@@ -56,12 +107,12 @@
 <ul>
 <li>点击确定后,程序断在这里,然后ALT+M打开内存,在代码区设断</li>
 </ul>
-<center><br>    <center><br>        <img src="/img/blog_img/5月/3.png"><br>    </center><br></center>
+<center><br>    <center><br>        <img src="/img/blog_img/5月/消息断点/3.png"><br>    </center><br></center>
 
 <ul>
 <li>点击运行:</li>
 </ul>
-<center><br>    <center><br>        <img src="/img/blog_img/5月/4.png"><br>    </center><br></center>
+<center><br>    <center><br>        <img src="/img/blog_img/5月/消息断点/4.png"><br>    </center><br></center>
 
 <font size="30" color="GREEN">OK</font>
 
