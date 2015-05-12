@@ -80,6 +80,180 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/05/12/IAT被壳修改如何修复IAT/" title="IAT被壳修改如何修复IAT" itemprop="url">IAT被壳修改如何修复IAT</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="dw" target="_blank" itemprop="author">dw</a>
+		
+  <p class="article-time">
+    <time datetime="2015-05-12T09:21:26.000Z" itemprop="datePublished"> 发表于 2015-05-12</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <pre><code>很多比较鸡贼的壳都会修改程序的<span class="variable">IAT</span>,这里说的修改不是指加壳以后的修改(加壳以后几乎所有的壳都会重建程序的<span class="variable">IAT</span>),而是指程序到达真正的<span class="variable">OEP</span>以后,发现<span class="variable">IAT</span>表中很多函数指到了别的地方,导致<span class="variable">ImportRec</span>无法修复.
+</code></pre><h1 id="原理">原理</h1><blockquote>
+<p>加壳程序要保证原程序能够正常运行,必须在程序到达真正的OEP之前将程序的IAT恢复出来,这里说的恢复有下面两种情况:</p>
+</blockquote>
+<ul>
+<li>1.原封不动的恢复</li>
+<li>2.修改原IAT表中的项,让他指向一个新的函数,这个函数实现了原导入函数相似的功能.</li>
+</ul>
+<blockquote>
+<p>第一种就不多说了,直接上ImportREC搞定,至于第二种,可以使用如下方法:<br>我们知道,程序在加载IAT时,需要从相应的DLL中读出指定的函数,我们就可以从这里入手,因为上面两种情况都会执行这个步骤.当IAT加载代码从DLL中读出原函数以后,是不是要<font color="red">经过相应的处理,变化,然后把得到的结果放到IAT对应的项中?</font>我们的目的就是<font color="red">阻止这些修改!</font></p>
+</blockquote>
+<h1 id="过程">过程</h1><blockquote>
+<p>不同的壳情况当然也不一样,我们这里使用一个加壳的记事本程序,PEID没查到壳,不要紧,方法都是通用的</p>
+</blockquote>
+<p><strong><font color="GREEN" size="5">这种方法需要先脱壳,脱壳就不说了,直接在代码段下断,然后单步跟踪,很容易找到OEP</font></strong></p>
+<blockquote>
+<p>找到OEP后,LoadPE转储,ImportRec修复,找到修复无效指针直接剪贴,常规流程!但是,剪贴以后傻逼了,直接成下面这样了</p>
+</blockquote>
+<center><br>    <img src="/img/blog_img/5月/IAT被壳修改如何修复IAT/1.png"><br></center>
+
+<blockquote>
+<p>一个程序只导入了12个函数,可能吗?我只能说,可能性不大<br>再看看内存镜像里面的IAT,万一ImportRec把IAT的偏移或者大小计算错了呢?这种情况经常发生!</p>
+</blockquote>
+<p>查看内存镜像,如下图</p>
+<center><br>    <img src="/img/blog_img/5月/IAT被壳修改如何修复IAT/2.png"><br></center>
+
+<p>看来ImportRec没有出错,另外,可以看到,IAT里面有很多非DLL导出函数指针,这个应该就是壳修改以后的函数指针了,随便找一个位置(最好不要找第一个,这样可以有个参考),设置内存写入断点,看它是怎么写的.点了几次以后,内存镜像和中断位置如下</p>
+<center><br>    <img src="/img/blog_img/5月/IAT被壳修改如何修复IAT/3.png"><br></center>
+
+<center><br>    <img src="/img/blog_img/5月/IAT被壳修改如何修复IAT/4.png"><br></center>
+
+<p>看来<font color="red">ECX</font>存储的是函数指针,而上面又有<font color="red">MOV ECX,DWORD PTR SS:[EBP+40D456]</font>,所以直接找<font color="red">DWORD PTR SS:[EBP+40D456]</font>.</p>
+<center><br>    <img src="/img/blog_img/5月/IAT被壳修改如何修复IAT/5.png"><br></center>
+
+<p>这里,记住这个位置,重新开始,在40d400下断.发现这里如果把JE改成JMP的话可以跳过刚才的代码,试下.</p>
+<blockquote>
+<p>重新来到OEP,现在在看看IAT</p>
+</blockquote>
+<center><br>    <img src="/img/blog_img/5月/IAT被壳修改如何修复IAT/6.png"><br></center>
+
+<p>妥妥的!</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/逆向工程/">逆向工程</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/脱壳/">脱壳</a><a href="/tags/逆向工程/">逆向工程</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/05/12/IAT被壳修改如何修复IAT/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/12/IAT被壳修改如何修复IAT/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/05/12/利用管道自写shell/" title="利用管道自写shell" itemprop="url">利用管道自写shell</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="dw" target="_blank" itemprop="author">dw</a>
+		
+  <p class="article-time">
+    <time datetime="2015-05-12T08:47:48.000Z" itemprop="datePublished"> 发表于 2015-05-12</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <pre><code>有时我们需要写一个<span class="keyword">Shell</span>来完成一些比较猥琐的事(比如远程<span class="keyword">Shell</span>)，怎么办？完全自己写一个<span class="keyword">shell</span>吗？可行，但是工作量太大;有一个比较好的方案能帮助我们快速的完成工作--管道.
+</code></pre><h1 id="原理:">原理:</h1><blockquote>
+<p>这方面资料网上其实挺多的，简单说下吧,程序一般都有输入句柄和输出句柄,什么叫输入呢,就是你向它发送数据,输出肯定就是它向你发送数据了,简单来说,<font color="red">printf</font>算是输出,<font color="red">scanf</font>算是输入.一般来说,打开<font color="red">cmd.exe</font>如果不进行设置的话它的输入输出句柄就被设置成默认的了,也就是<font color="red">GetStdHandle</font>的返回值,那如果把输入输出句柄设置成我们自己设定的会怎么样呢？没错,就可以使用<font color="red">ReadFile</font>读取它的输出,使用<font color="red">WriteFile</font>向它输入!</p>
+</blockquote>
+<h1 id="实现:">实现:</h1><blockquote>
+<p>废话不说,直接上代码</p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;stdio.h&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;Windows.h&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> BUFFER_SIZE 1024</span></span><br><span class="line"></span><br><span class="line">HANDLE hProcess=<span class="number">0</span>;</span><br><span class="line">HANDLE hRead1,hRead2;</span><br><span class="line">HANDLE hWrite1,hWrite2;</span><br><span class="line"></span><br><span class="line"><span class="function">BOOL WINAPI <span class="title">HandlerRoutine</span><span class="params">(DWORD dwType)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(hProcess)</span><br><span class="line">	&#123;</span><br><span class="line">		TerminateProcess(hProcess,<span class="number">0</span>);</span><br><span class="line">		CloseHandle(hRead1);</span><br><span class="line">		CloseHandle(hRead2);</span><br><span class="line">		CloseHandle(hWrite1);</span><br><span class="line">		CloseHandle(hWrite2);</span><br><span class="line">		hProcess=<span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">DWORD __<span class="function">stdcall <span class="title">ReadThread</span><span class="params">(<span class="keyword">void</span> * pData)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">char</span> buffer[BUFFER_SIZE];</span><br><span class="line">	DWORD len;</span><br><span class="line">	HANDLE hRead=(HANDLE)pData;</span><br><span class="line">	<span class="keyword">while</span>(<span class="number">1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		ReadFile(hRead,buffer,BUFFER_SIZE,&amp;len,<span class="number">0</span>);</span><br><span class="line">		buffer[len]=<span class="number">0</span>;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"%s"</span>,buffer);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc,<span class="keyword">char</span> * argv[])</span></span><br><span class="line"></span>&#123;</span><br><span class="line"></span><br><span class="line">	SECURITY_ATTRIBUTES sa;</span><br><span class="line">	PROCESS_INFORMATION pi;</span><br><span class="line">	STARTUPINFO si;</span><br><span class="line">	DWORD len;</span><br><span class="line">	<span class="keyword">char</span> buffer[BUFFER_SIZE];</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>(argc&lt;<span class="number">2</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"输入程序路径!\r\n"</span>);</span><br><span class="line">		<span class="keyword">return</span> ;</span><br><span class="line">	&#125;</span><br><span class="line">	SetConsoleCtrlHandler(HandlerRoutine,<span class="number">1</span>);</span><br><span class="line">	sa.bInheritHandle=<span class="number">1</span>;  <span class="comment">//设置继承</span></span><br><span class="line">	sa.nLength=<span class="keyword">sizeof</span>(sa);</span><br><span class="line">	sa.lpSecurityDescriptor=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>((!CreatePipe(&amp;hRead1,&amp;hWrite1,&amp;sa,<span class="number">0</span>))||(!CreatePipe(&amp;hRead2,&amp;hWrite2,&amp;sa,<span class="number">0</span>)))</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"CreatePipe failed!\r\n"</span>);</span><br><span class="line">		<span class="keyword">return</span> ;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">memset</span>(&amp;si,<span class="number">0</span>,<span class="keyword">sizeof</span>(si));</span><br><span class="line">	<span class="built_in">memset</span>(&amp;pi,<span class="number">0</span>,<span class="keyword">sizeof</span>(pi));</span><br><span class="line"></span><br><span class="line">	GetStartupInfo(&amp;si);</span><br><span class="line">	si.dwFlags=STARTF_USESHOWWINDOW|STARTF_USESTDHANDLES;</span><br><span class="line">	si.hStdError=hWrite1;</span><br><span class="line">	si.hStdInput=hRead2;</span><br><span class="line">	si.hStdOutput=hWrite1;</span><br><span class="line">	si.wShowWindow=SW_HIDE;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>(!CreateProcess(argv[<span class="number">1</span>],<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,&amp;si,&amp;pi))</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"CreateProcess failed!\r\n"</span>);</span><br><span class="line">		<span class="keyword">return</span> ;</span><br><span class="line">	&#125;</span><br><span class="line">	hProcess=pi.hProcess;</span><br><span class="line">	Sleep(<span class="number">300</span>); <span class="comment">//等待程序执行</span></span><br><span class="line">	PeekNamedPipe(hRead1,buffer,<span class="number">1</span>,&amp;len,<span class="number">0</span>,<span class="number">0</span>);</span><br><span class="line">	<span class="keyword">while</span>(len)</span><br><span class="line">	&#123;</span><br><span class="line">		ReadFile(hRead1,buffer,BUFFER_SIZE,&amp;len,<span class="number">0</span>);</span><br><span class="line">		buffer[len]=<span class="number">0</span>;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"%s"</span>,buffer);</span><br><span class="line">		PeekNamedPipe(hRead1,buffer,<span class="number">1</span>,&amp;len,<span class="number">0</span>,<span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	CloseHandle(CreateThread(<span class="number">0</span>,<span class="number">0</span>,ReadThread,(<span class="keyword">void</span> *)hRead1,<span class="number">0</span>,<span class="number">0</span>));</span><br><span class="line">	<span class="keyword">while</span>(<span class="number">1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		gets(buffer);</span><br><span class="line">		len=<span class="built_in">strlen</span>(buffer);</span><br><span class="line">		<span class="keyword">if</span>(len&gt;BUFFER_SIZE-<span class="number">2</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">"防溢出!\r\n"</span>);</span><br><span class="line">			<span class="keyword">continue</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		WriteFile(hWrite2,buffer,len,&amp;len,<span class="number">0</span>);</span><br><span class="line">		WriteFile(hWrite2,<span class="string">"\r\n"</span>,<span class="number">2</span>,&amp;len,<span class="number">0</span>); <span class="comment">//执行</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="效果">效果</h1><center><br>    <img src="/img/blog_img/5月/利用管道自写shell/1.png"><br></center>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/C语言/">C语言</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/C语言/">C语言</a><a href="/tags/Windows/">Windows</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/05/12/利用管道自写shell/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/12/利用管道自写shell/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/05/06/C语言编写进程转储工具/" title="C语言编写进程转储工具" itemprop="url">C语言编写进程转储工具</a>
   </h1>
   <p class="article-author">By
@@ -609,6 +783,10 @@
 		<ul>
 		
 		  
+			<li><a href="/categories/C语言/" title="C语言">C语言<sup>1</sup></a></li>
+		  
+		
+		  
 			<li><a href="/categories/hack/" title="hack">hack<sup>1</sup></a></li>
 		  
 		
@@ -621,7 +799,7 @@
 		  
 		
 		  
-			<li><a href="/categories/逆向工程/" title="逆向工程">逆向工程<sup>2</sup></a></li>
+			<li><a href="/categories/逆向工程/" title="逆向工程">逆向工程<sup>3</sup></a></li>
 		  
 		
 		</ul>
@@ -634,11 +812,11 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/逆向工程/" title="逆向工程">逆向工程<sup>2</sup></a></li>
+				<li><a href="/tags/逆向工程/" title="逆向工程">逆向工程<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/C语言/" title="C语言">C语言<sup>2</sup></a></li>
+				<li><a href="/tags/C语言/" title="C语言">C语言<sup>3</sup></a></li>
 			
 		
 			
@@ -658,7 +836,11 @@
 			
 		
 			
-				<li><a href="/tags/OD/" title="OD">OD<sup>1</sup></a></li>
+				<li><a href="/tags/blog/" title="blog">blog<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/脱壳/" title="脱壳">脱壳<sup>1</sup></a></li>
 			
 		
 			
@@ -678,7 +860,11 @@
 			
 		
 			
-				<li><a href="/tags/blog/" title="blog">blog<sup>1</sup></a></li>
+				<li><a href="/tags/OD/" title="OD">OD<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Windows/" title="Windows">Windows<sup>1</sup></a></li>
 			
 		
 		</ul>

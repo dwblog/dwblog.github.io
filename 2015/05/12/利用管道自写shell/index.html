@@ -1,0 +1,549 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>利用管道自写shell | dw的博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="dw">
+    
+
+    
+    <meta name="description" content="有时我们需要写一个Shell来完成一些比较猥琐的事(比如远程Shell)，怎么办？完全自己写一个shell吗？可行，但是工作量太大;有一个比较好的方案能帮助我们快速的完成工作--管道.
+原理:
+这方面资料网上其实挺多的，简单说下吧,程序一般都有输入句柄和输出句柄,什么叫输入呢,就是你向它发送数据,输出肯定就是它向你发送数据了,简单来说,printf算是输出,scanf算是输入.一般来说,打开cmd">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利用管道自写shell">
+<meta property="og:url" content="http://yoursite.com/2015/05/12/利用管道自写shell/index.html">
+<meta property="og:site_name" content="dw的博客">
+<meta property="og:description" content="有时我们需要写一个Shell来完成一些比较猥琐的事(比如远程Shell)，怎么办？完全自己写一个shell吗？可行，但是工作量太大;有一个比较好的方案能帮助我们快速的完成工作--管道.
+原理:
+这方面资料网上其实挺多的，简单说下吧,程序一般都有输入句柄和输出句柄,什么叫输入呢,就是你向它发送数据,输出肯定就是它向你发送数据了,简单来说,printf算是输出,scanf算是输入.一般来说,打开cmd">
+<meta property="og:image" content="/img/blog_img/5月/利用管道自写shell/1.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="利用管道自写shell">
+<meta name="twitter:description" content="有时我们需要写一个Shell来完成一些比较猥琐的事(比如远程Shell)，怎么办？完全自己写一个shell吗？可行，但是工作量太大;有一个比较好的方案能帮助我们快速的完成工作--管道.
+原理:
+这方面资料网上其实挺多的，简单说下吧,程序一般都有输入句柄和输出句柄,什么叫输入呢,就是你向它发送数据,输出肯定就是它向你发送数据了,简单来说,printf算是输出,scanf算是输入.一般来说,打开cmd">
+
+    
+    <link rel="alternative" href="/atom.xml" title="dw的博客" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="dw的博客" title="dw的博客"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="dw的博客">dw的博客</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+							<label>Search</label>
+						<input type="text" class="st-default-search-input" id="st-search-input" maxlength="20" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/05/12/利用管道自写shell/" title="利用管道自写shell" itemprop="url">利用管道自写shell</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="dw" target="_blank" itemprop="author">dw</a>
+		
+  <p class="article-time">
+    <time datetime="2015-05-12T08:47:48.000Z" itemprop="datePublished"> 发表于 2015-05-12</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#原理:"><span class="toc-number">1.</span> <span class="toc-text">原理:</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#实现:"><span class="toc-number">2.</span> <span class="toc-text">实现:</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#效果"><span class="toc-number">3.</span> <span class="toc-text">效果</span></a></li></ol>
+		
+		</div>
+		
+		<pre><code>有时我们需要写一个<span class="keyword">Shell</span>来完成一些比较猥琐的事(比如远程<span class="keyword">Shell</span>)，怎么办？完全自己写一个<span class="keyword">shell</span>吗？可行，但是工作量太大;有一个比较好的方案能帮助我们快速的完成工作--管道.
+</code></pre><h1 id="原理:">原理:</h1><blockquote>
+<p>这方面资料网上其实挺多的，简单说下吧,程序一般都有输入句柄和输出句柄,什么叫输入呢,就是你向它发送数据,输出肯定就是它向你发送数据了,简单来说,<font color="red">printf</font>算是输出,<font color="red">scanf</font>算是输入.一般来说,打开<font color="red">cmd.exe</font>如果不进行设置的话它的输入输出句柄就被设置成默认的了,也就是<font color="red">GetStdHandle</font>的返回值,那如果把输入输出句柄设置成我们自己设定的会怎么样呢？没错,就可以使用<font color="red">ReadFile</font>读取它的输出,使用<font color="red">WriteFile</font>向它输入!</p>
+</blockquote>
+<h1 id="实现:">实现:</h1><blockquote>
+<p>废话不说,直接上代码</p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;stdio.h&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;Windows.h&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> BUFFER_SIZE 1024</span></span><br><span class="line"></span><br><span class="line">HANDLE hProcess=<span class="number">0</span>;</span><br><span class="line">HANDLE hRead1,hRead2;</span><br><span class="line">HANDLE hWrite1,hWrite2;</span><br><span class="line"></span><br><span class="line"><span class="function">BOOL WINAPI <span class="title">HandlerRoutine</span><span class="params">(DWORD dwType)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(hProcess)</span><br><span class="line">	&#123;</span><br><span class="line">		TerminateProcess(hProcess,<span class="number">0</span>);</span><br><span class="line">		CloseHandle(hRead1);</span><br><span class="line">		CloseHandle(hRead2);</span><br><span class="line">		CloseHandle(hWrite1);</span><br><span class="line">		CloseHandle(hWrite2);</span><br><span class="line">		hProcess=<span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">DWORD __<span class="function">stdcall <span class="title">ReadThread</span><span class="params">(<span class="keyword">void</span> * pData)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">char</span> buffer[BUFFER_SIZE];</span><br><span class="line">	DWORD len;</span><br><span class="line">	HANDLE hRead=(HANDLE)pData;</span><br><span class="line">	<span class="keyword">while</span>(<span class="number">1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		ReadFile(hRead,buffer,BUFFER_SIZE,&amp;len,<span class="number">0</span>);</span><br><span class="line">		buffer[len]=<span class="number">0</span>;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"%s"</span>,buffer);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc,<span class="keyword">char</span> * argv[])</span></span><br><span class="line"></span>&#123;</span><br><span class="line"></span><br><span class="line">	SECURITY_ATTRIBUTES sa;</span><br><span class="line">	PROCESS_INFORMATION pi;</span><br><span class="line">	STARTUPINFO si;</span><br><span class="line">	DWORD len;</span><br><span class="line">	<span class="keyword">char</span> buffer[BUFFER_SIZE];</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>(argc&lt;<span class="number">2</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"输入程序路径!\r\n"</span>);</span><br><span class="line">		<span class="keyword">return</span> ;</span><br><span class="line">	&#125;</span><br><span class="line">	SetConsoleCtrlHandler(HandlerRoutine,<span class="number">1</span>);</span><br><span class="line">	sa.bInheritHandle=<span class="number">1</span>;  <span class="comment">//设置继承</span></span><br><span class="line">	sa.nLength=<span class="keyword">sizeof</span>(sa);</span><br><span class="line">	sa.lpSecurityDescriptor=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>((!CreatePipe(&amp;hRead1,&amp;hWrite1,&amp;sa,<span class="number">0</span>))||(!CreatePipe(&amp;hRead2,&amp;hWrite2,&amp;sa,<span class="number">0</span>)))</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"CreatePipe failed!\r\n"</span>);</span><br><span class="line">		<span class="keyword">return</span> ;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">memset</span>(&amp;si,<span class="number">0</span>,<span class="keyword">sizeof</span>(si));</span><br><span class="line">	<span class="built_in">memset</span>(&amp;pi,<span class="number">0</span>,<span class="keyword">sizeof</span>(pi));</span><br><span class="line"></span><br><span class="line">	GetStartupInfo(&amp;si);</span><br><span class="line">	si.dwFlags=STARTF_USESHOWWINDOW|STARTF_USESTDHANDLES;</span><br><span class="line">	si.hStdError=hWrite1;</span><br><span class="line">	si.hStdInput=hRead2;</span><br><span class="line">	si.hStdOutput=hWrite1;</span><br><span class="line">	si.wShowWindow=SW_HIDE;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>(!CreateProcess(argv[<span class="number">1</span>],<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,&amp;si,&amp;pi))</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"CreateProcess failed!\r\n"</span>);</span><br><span class="line">		<span class="keyword">return</span> ;</span><br><span class="line">	&#125;</span><br><span class="line">	hProcess=pi.hProcess;</span><br><span class="line">	Sleep(<span class="number">300</span>); <span class="comment">//等待程序执行</span></span><br><span class="line">	PeekNamedPipe(hRead1,buffer,<span class="number">1</span>,&amp;len,<span class="number">0</span>,<span class="number">0</span>);</span><br><span class="line">	<span class="keyword">while</span>(len)</span><br><span class="line">	&#123;</span><br><span class="line">		ReadFile(hRead1,buffer,BUFFER_SIZE,&amp;len,<span class="number">0</span>);</span><br><span class="line">		buffer[len]=<span class="number">0</span>;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"%s"</span>,buffer);</span><br><span class="line">		PeekNamedPipe(hRead1,buffer,<span class="number">1</span>,&amp;len,<span class="number">0</span>,<span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	CloseHandle(CreateThread(<span class="number">0</span>,<span class="number">0</span>,ReadThread,(<span class="keyword">void</span> *)hRead1,<span class="number">0</span>,<span class="number">0</span>));</span><br><span class="line">	<span class="keyword">while</span>(<span class="number">1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		gets(buffer);</span><br><span class="line">		len=<span class="built_in">strlen</span>(buffer);</span><br><span class="line">		<span class="keyword">if</span>(len&gt;BUFFER_SIZE-<span class="number">2</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">"防溢出!\r\n"</span>);</span><br><span class="line">			<span class="keyword">continue</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		WriteFile(hWrite2,buffer,len,&amp;len,<span class="number">0</span>);</span><br><span class="line">		WriteFile(hWrite2,<span class="string">"\r\n"</span>,<span class="number">2</span>,&amp;len,<span class="number">0</span>); <span class="comment">//执行</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="效果">效果</h1><center><br>    <img src="/img/blog_img/5月/利用管道自写shell/1.png"><br></center>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/C语言/">C语言</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/C语言/">C语言</a><a href="/tags/Windows/">Windows</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://yoursite.com/2015/05/12/利用管道自写shell/" data-title="利用管道自写shell | dw的博客" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/05/12/IAT被壳修改如何修复IAT/" title="IAT被壳修改如何修复IAT">
+  <strong>上一篇：</strong><br/>
+  <span>
+  IAT被壳修改如何修复IAT</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/05/06/C语言编写进程转储工具/"  title="C语言编写进程转储工具">
+ <strong>下一篇：</strong><br/> 
+ <span>C语言编写进程转储工具
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/05/12/利用管道自写shell/" data-title="利用管道自写shell" data-url="http://yoursite.com/2015/05/12/利用管道自写shell/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#原理:"><span class="toc-number">1.</span> <span class="toc-text">原理:</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#实现:"><span class="toc-number">2.</span> <span class="toc-text">实现:</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#效果"><span class="toc-number">3.</span> <span class="toc-text">效果</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/C语言/" title="C语言">C语言<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/hack/" title="hack">hack<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/安装/" title="安装">安装<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/日志/" title="日志">日志<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/逆向工程/" title="逆向工程">逆向工程<sup>3</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/逆向工程/" title="逆向工程">逆向工程<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/C语言/" title="C语言">C语言<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/表单劫持/" title="表单劫持">表单劫持<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/js/" title="js">js<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hack/" title="hack">hack<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/new/" title="new">new<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/blog/" title="blog">blog<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/脱壳/" title="脱壳">脱壳<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hexo/" title="hexo">hexo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/github/" title="github">github<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/无域名/" title="无域名">无域名<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/windows/" title="windows">windows<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/OD/" title="OD">OD<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Windows/" title="Windows">Windows<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://www.baidu.com" target="_blank" title="百度">百度</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://guojinyu.github.io/" target="_blank" title="男神">男神</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m dw. <br/>
+			This is my blog,believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		2015 
+		
+		by <a href="/about">dw</a>
+		
+		QQ: <a href="/">331433072</a>
+		</p>
+	
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','s6yi2yyxXxvCbo3nyz_A','2.0.0');
+</script>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"dwsblog"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Fnull' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
