@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://yoursite.com/"/>
-  <updated>2015-05-12T11:16:09.113Z</updated>
+  <updated>2015-05-13T15:26:08.052Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://yoursite.com/2015/05/12/IAT%E8%A2%AB%E5%A3%B3%E4%BF%AE%E6%94%B9%E5%A6%82%E4%BD%95%E4%BF%AE%E5%A4%8DIAT/"/>
     <id>http://yoursite.com/2015/05/12/IAT被壳修改如何修复IAT/</id>
     <published>2015-05-12T09:21:26.000Z</published>
-    <updated>2015-05-12T11:16:09.113Z</updated>
+    <updated>2015-05-13T15:26:08.052Z</updated>
     <content type="html"><![CDATA[<pre><code>很多比较鸡贼的壳都会修改程序的<span class="variable">IAT</span>,这里说的修改不是指加壳以后的修改(加壳以后几乎所有的壳都会重建程序的<span class="variable">IAT</span>),而是指程序到达真正的<span class="variable">OEP</span>以后,发现<span class="variable">IAT</span>表中很多函数指到了别的地方,导致<span class="variable">ImportRec</span>无法修复.
 </code></pre><h1 id="原理">原理</h1><blockquote>
 <p>加壳程序要保证原程序能够正常运行,必须在程序到达真正的OEP之前将程序的IAT恢复出来,这里说的恢复有下面两种情况:</p>
@@ -61,7 +61,7 @@
 <center><br>    <img src="/img/blog_img/5月/IAT被壳修改如何修复IAT/6.png"><br></center>
 
 <p>妥妥的!</p>
-]]></content>
+<font color="red" size="7">PS:这种方法有时候会遇到壳自校验的问题,也就是说外壳发现你修改了代码,直接退出,这时,我们已经知道了IAT,直接用ImportRec修复之前保存好的转储文件就行了,其中,OEP填写真正的OEP.</font>]]></content>
     <summary type="html">
     <![CDATA[<pre><code>很多比较鸡贼的壳都会修改程序的<span class="variable">IAT</span>,这里说的修改不是指加壳以后的修改(加壳以后几乎所有的壳都会重建程序的<span class="variable">IAT</span>),而是指程序到达真正的<]]>
     </summary>
